@@ -27,10 +27,14 @@ func setup() {
 		return
 	}
 
-	// Set the JWT Secret
 	secret = os.Getenv("JWT_SECRET")
 	if secret == "" {
-		panic("No JWT secret was set!")
+		token, err := n.Request("config.get.jwt_token", []byte(""), 1*time.Second)
+		if err != nil {
+			panic("Can't get jwt_config config")
+		}
+
+		secret = string(token.Data)
 	}
 
 	cfg := monitorConfig{}
