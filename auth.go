@@ -5,9 +5,9 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/dgrijalva/jwt-go"
 )
@@ -16,10 +16,19 @@ func unauthorized(w http.ResponseWriter) {
 	http.Error(w, "Unauthorized", http.StatusUnauthorized)
 }
 
+func extractToken(r *http.Request) (string, error) {
+	auth := r.Header.Get("Authorization")
+	l := len("Bearer")
+	if len(auth) > l+1 && auth[:l] == "Bearer" {
+		return auth[l+1:], nil
+	}
+	return "", errors.New("Invalid Token")
+}
+
 func authMiddleware(w http.ResponseWriter, r *http.Request) {
 	// Check Auth, Until Proper Auth Service is implemented
-	authToken := strings.Trim(r.Header.Get("Authorization"), "Bearer ")
-	if authToken == "" {
+	authToken, err := extractToken(r)
+	if err != nil {
 		unauthorized(w)
 		return
 	}
