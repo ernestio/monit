@@ -31,8 +31,14 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/events", authMiddleware)
 
-	// Start nats handler, subscribe to all events
-	n.Subscribe(">", natsHandler)
+	// Start nats handler, subscribe to all events related with the monitor
+	n.Subscribe("monitor.user", natsHandler)
+	n.Subscribe("service.create", natsHandler)
+	n.Subscribe("service.delete", natsHandler)
+	n.Subscribe("service.create.done", natsHandler)
+	n.Subscribe("service.create.error", natsHandler)
+	n.Subscribe("service.delete.done", natsHandler)
+	n.Subscribe("service.delete.error", natsHandler)
 
 	// Start Listening
 	addr := fmt.Sprintf("%s:%s", host, port)

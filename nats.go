@@ -5,10 +5,10 @@
 package main
 
 import (
-	"time"
-
 	"github.com/nats-io/nats"
 	"github.com/r3labs/sse"
+	"log"
+	"time"
 )
 
 func natsHandler(msg *nats.Msg) {
@@ -25,9 +25,11 @@ func natsHandler(msg *nats.Msg) {
 		}
 	case "service.create", "service.delete":
 		// Create a new stream
+		log.Println("Creating stream for", notification.getServiceID())
 		s.CreateStream(notification.getServiceID())
 	case "service.create.done", "service.create.error", "service.delete.done", "service.delete.error":
 		// Remove a new stream when the build completes
+		log.Println("Closing stream for", notification.getServiceID())
 		go func(s *sse.Server) {
 			// Notifications appear out of order, wait for all notifications to come through before closing
 			time.Sleep(time.Second)
