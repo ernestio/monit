@@ -5,6 +5,7 @@ deps: dev-deps
 	go get github.com/r3labs/sse
 	go get gopkg.in/redis.v3
 	go get github.com/nats-io/nats
+	go get github.com/dgrijalva/jwt-go
 
 dev-deps:
 	go get github.com/smartystreets/goconvey/convey
