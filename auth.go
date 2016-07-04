@@ -5,27 +5,47 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
+
+	"github.com/dgrijalva/jwt-go"
 )
 
 func unauthorized(w http.ResponseWriter) {
 	http.Error(w, "Unauthorized", http.StatusUnauthorized)
 }
 
+func extractToken(r *http.Request) (string, error) {
+	auth := r.Header.Get("Authorization")
+	l := len("Bearer")
+	if len(auth) > l+1 && auth[:l] == "Bearer" {
+		return auth[l+1:], nil
+	}
+	return "", errors.New("Invalid Token")
+}
+
 func authMiddleware(w http.ResponseWriter, r *http.Request) {
 	// Check Auth, Until Proper Auth Service is implemented
-	authToken := r.Header.Get("X-Auth-Token")
-	fmt.Println(authToken)
-	if authToken == "" {
+	authToken, err := extractToken(r)
+	if err != nil {
 		unauthorized(w)
 		return
 	}
 
-	user, err := db.Get(authToken).Result()
-	fmt.Println(user)
-	fmt.Println(err)
-	if err != nil || user == "" {
+	token, err := jwt.Parse(authToken, func(t *jwt.Token) (interface{}, error) {
+		if t.Method.Alg() != jwt.SigningMethodHS256.Alg() {
+			return nil, fmt.Errorf("unexpected jwt signing method=%v", t.Header["alg"])
+		}
+		return []byte(secret), nil
+	})
+
+	if err != nil {
+		unauthorized(w)
+		return
+	}
+
+	if token.Valid != true {
 		unauthorized(w)
 		return
 	}
