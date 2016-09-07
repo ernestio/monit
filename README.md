@@ -8,8 +8,8 @@ These events are collected into an inbox based on the monitor id passed by the u
 
 ## Build status
 
-* Master: [![CircleCI Master](https://circleci.com/gh/ErnestIO/monit/tree/master.svg?style=svg)](https://circleci.com/gh/ErnestIO/monit/tree/master)
-* Develop: [![CircleCI Develop](https://circleci.com/gh/ErnestIO/monit/tree/develop.svg?style=svg)](https://circleci.com/gh/ErnestIO/monit/tree/develop)
+* Master: [![CircleCI Master](https://circleci.com/gh/ernestio/monit/tree/master.svg?style=svg)](https://circleci.com/gh/ernestio/monit/tree/master)
+* Develop: [![CircleCI Develop](https://circleci.com/gh/ernestio/monit/tree/develop.svg?style=svg)](https://circleci.com/gh/ernestio/monit/tree/develop)
 
 
 ## Installation
