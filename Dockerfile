@@ -2,8 +2,8 @@ FROM golang:1.6.2-alpine
 
 RUN apk add --update git && apk add --update make && rm -rf /var/cache/apk/*
 
-ADD . /go/src/github.com/ernestio/monit
-WORKDIR /go/src/github.com/ernestio/monit
+ADD . /go/src/github.com/${GITHUB_ORG:-ernestio}/monit
+WORKDIR /go/src/github.com/${GITHUB_ORG:-ernestio}/monit
 
 RUN make deps && go install
 
