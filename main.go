@@ -40,6 +40,9 @@ func main() {
 	n.Subscribe("service.delete.done", natsHandler)
 	n.Subscribe("service.delete.error", natsHandler)
 
+	n.Subscribe("*.*", genericHandler)
+	n.Subscribe("*.*.*", genericHandler)
+
 	// Start Listening
 	addr := fmt.Sprintf("%s:%s", host, port)
 	http.ListenAndServe(addr, mux)
