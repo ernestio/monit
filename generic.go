@@ -30,6 +30,10 @@ func genericHandler(msg *nats.Msg) {
 	input.ID = notification.getServiceID()
 
 	switch msg.Subject {
+	case "routers.create":
+		msgLines = routersCreateHandler(input.Components)
+	case "routers.delete":
+		msgLines = routersDeleteHandler(input.Components)
 	case "routers.create.done":
 		msgLines = routersCreateHandler(input.Components)
 	case "routers.delete.done":
@@ -105,6 +109,14 @@ func genericHandler(msg *nats.Msg) {
 }
 
 func routersCreateHandler(components []interface{}) (lines []Message) {
+	return append(lines, Message{Body: "Creating routers:", Level: "INFO"})
+}
+
+func routersDeleteHandler(components []interface{}) (lines []Message) {
+	return append(lines, Message{Body: "Deleting router:", Level: "INFO"})
+}
+
+func routersCreateDoneHandler(components []interface{}) (lines []Message) {
 	for _, v := range components {
 		r := v.(map[string]interface{})
 		ip := r["ip"].(string)
@@ -116,7 +128,7 @@ func routersCreateHandler(components []interface{}) (lines []Message) {
 	return lines
 }
 
-func routersDeleteHandler(components []interface{}) (lines []Message) {
+func routersDeleteDoneHandler(components []interface{}) (lines []Message) {
 	return append(lines, Message{Body: "Routers deleted", Level: "INFO"})
 }
 
