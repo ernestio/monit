@@ -35,13 +35,17 @@ func genericHandler(msg *nats.Msg) {
 	case "routers.delete":
 		msgLines = routersDeleteHandler(input.Components)
 	case "routers.create.done":
-		msgLines = routersCreateHandler(input.Components)
+		msgLines = routersCreateDoneHandler(input.Components)
 	case "routers.delete.done":
-		msgLines = routersDeleteHandler(input.Components)
-	case "networks.create.done":
+		msgLines = routersDeleteDoneHandler(input.Components)
+	case "networks.create":
 		msgLines = networksCreateHandler(input.Components)
-	case "networks.delete.done":
+	case "networks.delete":
 		msgLines = networksDeleteHandler(input.Components)
+	case "networks.create.done":
+		msgLines = networksCreateDoneHandler(input.Components)
+	case "networks.delete.done":
+		msgLines = networksDeleteDoneHandler(input.Components)
 	case "instances.create.done":
 		msgLines = instancesCreateHandler(input.Components)
 	case "instances.update.done":
@@ -133,11 +137,19 @@ func routersDeleteDoneHandler(components []interface{}) (lines []Message) {
 }
 
 func networksCreateHandler(components []interface{}) (lines []Message) {
-	return append(lines, Message{Body: "Networks successfully created", Level: "INFO"})
+	return append(lines, Message{Body: "Creating networks:", Level: "INFO"})
 }
 
 func networksDeleteHandler(components []interface{}) (lines []Message) {
 	return append(lines, Message{Body: "Networks deleted", Level: "INFO"})
+}
+
+func networksCreateDoneHandler(components []interface{}) (lines []Message) {
+	return append(lines, Message{Body: "Networks successfully created", Level: "INFO"})
+}
+
+func networksDeleteDoneHandler(components []interface{}) (lines []Message) {
+	return append(lines, Message{Body: "Deleting networks:", Level: "INFO"})
 }
 
 func instancesCreateHandler(components []interface{}) (lines []Message) {
