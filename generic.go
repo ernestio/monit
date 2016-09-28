@@ -30,14 +30,22 @@ func genericHandler(msg *nats.Msg) {
 	input.ID = notification.getServiceID()
 
 	switch msg.Subject {
-	case "routers.create.done":
+	case "routers.create":
 		msgLines = routersCreateHandler(input.Components)
-	case "routers.delete.done":
+	case "routers.delete":
 		msgLines = routersDeleteHandler(input.Components)
-	case "networks.create.done":
+	case "routers.create.done":
+		msgLines = routersCreateDoneHandler(input.Components)
+	case "routers.delete.done":
+		msgLines = routersDeleteDoneHandler(input.Components)
+	case "networks.create":
 		msgLines = networksCreateHandler(input.Components)
-	case "networks.delete.done":
+	case "networks.delete":
 		msgLines = networksDeleteHandler(input.Components)
+	case "networks.create.done":
+		msgLines = networksCreateDoneHandler(input.Components)
+	case "networks.delete.done":
+		msgLines = networksDeleteDoneHandler(input.Components)
 	case "instances.create.done":
 		msgLines = instancesCreateHandler(input.Components)
 	case "instances.update.done":
@@ -105,6 +113,14 @@ func genericHandler(msg *nats.Msg) {
 }
 
 func routersCreateHandler(components []interface{}) (lines []Message) {
+	return append(lines, Message{Body: "Creating routers:", Level: "INFO"})
+}
+
+func routersDeleteHandler(components []interface{}) (lines []Message) {
+	return append(lines, Message{Body: "Deleting router:", Level: "INFO"})
+}
+
+func routersCreateDoneHandler(components []interface{}) (lines []Message) {
 	for _, v := range components {
 		r := v.(map[string]interface{})
 		ip := r["ip"].(string)
@@ -116,16 +132,24 @@ func routersCreateHandler(components []interface{}) (lines []Message) {
 	return lines
 }
 
-func routersDeleteHandler(components []interface{}) (lines []Message) {
+func routersDeleteDoneHandler(components []interface{}) (lines []Message) {
 	return append(lines, Message{Body: "Routers deleted", Level: "INFO"})
 }
 
 func networksCreateHandler(components []interface{}) (lines []Message) {
-	return append(lines, Message{Body: "Networks successfully created", Level: "INFO"})
+	return append(lines, Message{Body: "Creating networks:", Level: "INFO"})
 }
 
 func networksDeleteHandler(components []interface{}) (lines []Message) {
 	return append(lines, Message{Body: "Networks deleted", Level: "INFO"})
+}
+
+func networksCreateDoneHandler(components []interface{}) (lines []Message) {
+	return append(lines, Message{Body: "Networks successfully created", Level: "INFO"})
+}
+
+func networksDeleteDoneHandler(components []interface{}) (lines []Message) {
+	return append(lines, Message{Body: "Deleting networks:", Level: "INFO"})
 }
 
 func instancesCreateHandler(components []interface{}) (lines []Message) {
