@@ -38,20 +38,12 @@ func genericHandler(msg *nats.Msg) {
 		msgLines = routersCreateDoneHandler(input.Components)
 	case "routers.delete.done":
 		msgLines = routersDeleteDoneHandler(input.Components)
-	case "networks.create":
-		msgLines = networksCreateHandler(input.Components)
-	case "networks.delete":
-		msgLines = networksDeleteHandler(input.Components)
-	case "networks.create.done":
-		msgLines = networksCreateDoneHandler(input.Components)
-	case "networks.delete.done":
-		msgLines = networksDeleteDoneHandler(input.Components)
-	case "instances.create.done":
-		msgLines = instancesCreateHandler(input.Components)
-	case "instances.update.done":
-		msgLines = instancesUpdateHandler(input.Components)
-	case "instances.delete.done":
-		msgLines = instancesDeleteHandler(input.Components)
+	case "networks.create", "networks.delete", "networks.create.done", "networks.delete.done":
+		var n Network
+		msgLines = n.Handle(msg.Subject, input.Components, msgLines)
+	case "instances.create", "instances.update", "instances.delete", "instances.create.done", "instances.update.done", "instances.delete.done":
+		var n Instance
+		msgLines = n.Handle(msg.Subject, input.Components, msgLines)
 	case "firewalls.create.done":
 		msgLines = firewallsCreateHandler(input.Components)
 	case "firewalls.update.done":
@@ -80,12 +72,6 @@ func genericHandler(msg *nats.Msg) {
 		msgLines = genericErrorMessageHandler(input.Components, "Network", "creation")
 	case "networks.delete.error":
 		msgLines = genericErrorMessageHandler(input.Components, "Network", "deletion")
-	case "instances.create.error":
-		msgLines = genericErrorMessageHandler(input.Components, "Instance", "creation")
-	case "instances.delete.error":
-		msgLines = genericErrorMessageHandler(input.Components, "Instance", "deletion")
-	case "instances.update.error":
-		msgLines = genericErrorMessageHandler(input.Components, "Instance", "modification")
 	case "firewalls.create.error":
 		msgLines = genericErrorMessageHandler(input.Components, "Firewall", "creation")
 	case "firewalls.delete.error":
@@ -134,34 +120,6 @@ func routersCreateDoneHandler(components []interface{}) (lines []Message) {
 
 func routersDeleteDoneHandler(components []interface{}) (lines []Message) {
 	return append(lines, Message{Body: "Routers deleted", Level: "INFO"})
-}
-
-func networksCreateHandler(components []interface{}) (lines []Message) {
-	return append(lines, Message{Body: "Creating networks:", Level: "INFO"})
-}
-
-func networksDeleteHandler(components []interface{}) (lines []Message) {
-	return append(lines, Message{Body: "Networks deleted", Level: "INFO"})
-}
-
-func networksCreateDoneHandler(components []interface{}) (lines []Message) {
-	return append(lines, Message{Body: "Networks successfully created", Level: "INFO"})
-}
-
-func networksDeleteDoneHandler(components []interface{}) (lines []Message) {
-	return append(lines, Message{Body: "Deleting networks:", Level: "INFO"})
-}
-
-func instancesCreateHandler(components []interface{}) (lines []Message) {
-	return append(lines, Message{Body: "Instances successfully created", Level: "INFO"})
-}
-
-func instancesUpdateHandler(components []interface{}) (lines []Message) {
-	return append(lines, Message{Body: "Instances successfully updated", Level: "INFO"})
-}
-
-func instancesDeleteHandler(components []interface{}) (lines []Message) {
-	return append(lines, Message{Body: "Instances deleted", Level: "INFO"})
 }
 
 func firewallsCreateHandler(components []interface{}) (lines []Message) {
