@@ -16,18 +16,22 @@ func (n *Instance) Handle(subject string, components []interface{}, lines []Mess
 		return append(lines, Message{Body: "Instances successfully created", Level: "INFO"})
 	case "instances.create.error":
 		lines = n.getDetails(components)
-		return append(lines, Message{Body: "Instances successfully created", Level: "INFO"})
+		return append(lines, Message{Body: "Instances creation failed", Level: "INFO"})
 	case "instances.update":
 		return append(lines, Message{Body: "Updating instances:", Level: "INFO"})
 	case "instances.update.done":
 		lines = n.getDetails(components)
 		return append(lines, Message{Body: "Instances successfully updated", Level: "INFO"})
 	case "instances.update.error":
+		lines = n.getDetails(components)
+		return append(lines, Message{Body: "Instances modification failed", Level: "INFO"})
 	case "instances.delete":
 		return append(lines, Message{Body: "Deleting instances", Level: "INFO"})
 	case "instances.delete.done":
 		return append(lines, Message{Body: "Instances deleted", Level: "INFO"})
 	case "instances.delete.error":
+		lines = n.getDetails(components)
+		return append(lines, Message{Body: "Instances deletion failed", Level: "INFO"})
 	}
 	return lines
 }
@@ -49,6 +53,10 @@ func (n *Instance) getDetails(components []interface{}) (lines []Message) {
 			lines = append(lines, Message{Body: "   AWS ID    : " + id, Level: ""})
 		}
 		lines = append(lines, Message{Body: "   Status    : " + status, Level: ""})
+		if status == "errored" {
+			err := r["error_message"].(string)
+			lines = append(lines, Message{Body: "   Error     : " + err, Level: "ERROR"})
+		}
 	}
 
 	return lines

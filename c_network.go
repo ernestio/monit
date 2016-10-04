@@ -42,6 +42,10 @@ func (n *Network) listCreateDone(components []interface{}) (lines []Message) {
 			lines = append(lines, Message{Body: "   AWS ID : " + id, Level: ""})
 		}
 		lines = append(lines, Message{Body: "   Status : " + status, Level: ""})
+		if status == "errored" {
+			err := r["error_message"].(string)
+			lines = append(lines, Message{Body: "   Error     : " + err, Level: "ERROR"})
+		}
 	}
 
 	return append(lines, Message{Body: "Networks successfully created", Level: "INFO"})
