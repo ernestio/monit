@@ -6,6 +6,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"strings"
 
@@ -50,6 +51,7 @@ func processNotification(msg *nats.Msg) (*Notification, error) {
 
 func publishMessage(service string, msg *Message) {
 	data, err := json.Marshal(msg)
+	fmt.Println(string(data))
 
 	if err != nil {
 		log.Println("Could not encode message: ")
