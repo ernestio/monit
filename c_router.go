@@ -10,7 +10,7 @@ type Router struct {
 func (n *Router) Handle(subject string, components []interface{}, lines []Message) []Message {
 	switch subject {
 	case "routers.create":
-		lines = append(lines, Message{Body: "Creating firewall:", Level: "INFO"})
+		lines = append(lines, Message{Body: "Creating router:", Level: "INFO"})
 	case "routers.create.done":
 		lines = n.getDetails(components)
 		return append(lines, Message{Body: "Routers created", Level: "INFO"})
