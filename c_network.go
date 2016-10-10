@@ -10,26 +10,20 @@ type Network struct {
 func (n *Network) Handle(subject string, components []interface{}, lines []Message) []Message {
 	switch subject {
 	case "networks.create":
-		lines = n.listCreate(components)
+		return append(lines, Message{Body: "Creating networks:", Level: "INFO"})
 	case "networks.create.done":
-		lines = n.listCreateDone(components)
+		lines = n.getDetails(components)
+		return append(lines, Message{Body: "Networks successfully created", Level: "INFO"})
 	case "networks.delete":
-		lines = n.listDelete(components)
+		return append(lines, Message{Body: "Deleting networks:", Level: "INFO"})
 	case "networks.delete.done":
-		lines = n.listDeleteDone(components)
+		lines = n.getDetails(components)
+		return append(lines, Message{Body: "Networks deleted", Level: "INFO"})
 	}
 	return lines
 }
 
-func (n *Network) listCreate(components []interface{}) (lines []Message) {
-	return append(lines, Message{Body: "Creating networks:", Level: "INFO"})
-}
-
-func (n *Network) listDelete(components []interface{}) (lines []Message) {
-	return append(lines, Message{Body: "Networks deleted", Level: "INFO"})
-}
-
-func (n *Network) listCreateDone(components []interface{}) (lines []Message) {
+func (n *Network) getDetails(components []interface{}) (lines []Message) {
 	for _, v := range components {
 		r := v.(map[string]interface{})
 		ip := r["range"].(string)
@@ -47,10 +41,5 @@ func (n *Network) listCreateDone(components []interface{}) (lines []Message) {
 			lines = append(lines, Message{Body: "   Error     : " + err, Level: "ERROR"})
 		}
 	}
-
-	return append(lines, Message{Body: "Networks successfully created", Level: "INFO"})
-}
-
-func (n *Network) listDeleteDone(components []interface{}) (lines []Message) {
-	return append(lines, Message{Body: "Deleting networks:", Level: "INFO"})
+	return lines
 }

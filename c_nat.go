@@ -28,6 +28,7 @@ func (n *Nat) Handle(subject string, components []interface{}, lines []Message) 
 	case "nats.delete":
 		return append(lines, Message{Body: "Deleting nats:", Level: "INFO"})
 	case "nats.delete.done":
+		lines = n.getDetails(components)
 		return append(lines, Message{Body: "Nats deleted", Level: "INFO"})
 	case "nats.delete.error":
 		lines = n.getDetails(components)

@@ -28,6 +28,7 @@ func (n *Firewall) Handle(subject string, components []interface{}, lines []Mess
 	case "firewalls.delete":
 		return append(lines, Message{Body: "Deleting firewalls:", Level: "INFO"})
 	case "firewalls.delete.done":
+		lines = n.getDetails(components)
 		return append(lines, Message{Body: "Firewalls deleted", Level: "INFO"})
 	case "firewalls.delete.error":
 		lines = n.getDetails(components)
