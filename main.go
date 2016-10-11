@@ -25,6 +25,7 @@ func main() {
 	// Create new SSE server
 	s = sse.New()
 	s.AutoStream = true
+	s.EncodeBase64 = true
 	defer s.Close()
 
 	// Create new HTTP Server and add the route handler
