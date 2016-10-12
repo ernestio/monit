@@ -57,6 +57,9 @@ func genericHandler(msg *nats.Msg) {
 	case "bootstraps":
 		var n Bootstrap
 		msgLines = n.Handle(msg.Subject, input.Components, msgLines)
+	case "elbs":
+		var n ELB
+		msgLines = n.Handle(msg.Subject, input.Components, msgLines)
 	default:
 		switch msg.Subject {
 		case "executions.create.done":
