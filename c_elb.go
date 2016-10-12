@@ -46,7 +46,9 @@ func (n *ELB) getDetails(components []interface{}) (lines []Message) {
 		lines = append(lines, Message{Body: "   Status    : " + status, Level: ""})
 		if r["dns_name"] != nil {
 			dnsName := r["dns_name"].(string)
-			lines = append(lines, Message{Body: "   DNS    : " + dnsName, Level: ""})
+			if dnsName != "" {
+				lines = append(lines, Message{Body: "   DNS    : " + dnsName, Level: ""})
+			}
 		}
 		lines = append(lines)
 		if status == "errored" {
