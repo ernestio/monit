@@ -40,7 +40,7 @@ func (n *ELB) Handle(subject string, components []interface{}, lines []Message) 
 func (n *ELB) getDetails(components []interface{}) (lines []Message) {
 	for _, v := range components {
 		r := v.(map[string]interface{})
-		name := r["name"].(string)
+		name := r["elb_name"].(string)
 		status := r["status"].(string)
 		lines = append(lines, Message{Body: " - " + name, Level: ""})
 		lines = append(lines, Message{Body: "   Status    : " + status, Level: ""})
