@@ -10,7 +10,7 @@ type Vpc struct {
 func (n *Vpc) Handle(subject string, components []interface{}, lines []Message) []Message {
 	switch subject {
 	case "vpcs.create":
-		lines = append(lines, Message{Body: "Creating firewall:", Level: "INFO"})
+		lines = append(lines, Message{Body: "Creating Vpc:", Level: "INFO"})
 	case "vpcs.create.done":
 		lines = n.getDetails(components)
 		return append(lines, Message{Body: "Vpc created", Level: "INFO"})
@@ -35,7 +35,7 @@ func (n *Vpc) getDetails(components []interface{}) (lines []Message) {
 		subnet := r["vpc_subnet"].(string)
 		status := r["status"].(string)
 		lines = append(lines, Message{Body: " - " + id, Level: ""})
-		lines = append(lines, Message{Body: " - Subnet    : " + subnet, Level: ""})
+		lines = append(lines, Message{Body: "   Subnet    : " + subnet, Level: ""})
 		lines = append(lines, Message{Body: "   Status    : " + status, Level: ""})
 		if status == "errored" {
 			err := r["error_message"].(string)

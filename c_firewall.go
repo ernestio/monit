@@ -10,7 +10,7 @@ type Firewall struct {
 func (n *Firewall) Handle(subject string, components []interface{}, lines []Message) []Message {
 	switch subject {
 	case "firewalls.create":
-		lines = append(lines, Message{Body: "Creating firewall:", Level: "INFO"})
+		lines = append(lines, Message{Body: "Creating firewalls:", Level: "INFO"})
 	case "firewalls.create.done":
 		lines = n.getDetails(components)
 		return append(lines, Message{Body: "Firewalls created", Level: "INFO"})

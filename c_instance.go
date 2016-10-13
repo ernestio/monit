@@ -26,7 +26,7 @@ func (n *Instance) Handle(subject string, components []interface{}, lines []Mess
 		lines = n.getDetails(components)
 		return append(lines, Message{Body: "Instances modification failed", Level: "INFO"})
 	case "instances.delete":
-		return append(lines, Message{Body: "Deleting instances", Level: "INFO"})
+		return append(lines, Message{Body: "Deleting instances:", Level: "INFO"})
 	case "instances.delete.done":
 		lines = n.getDetails(components)
 		return append(lines, Message{Body: "Instances deleted", Level: "INFO"})
