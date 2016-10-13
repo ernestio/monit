@@ -10,7 +10,7 @@ type Nat struct {
 func (n *Nat) Handle(subject string, components []interface{}, lines []Message) []Message {
 	switch subject {
 	case "nats.create":
-		lines = append(lines, Message{Body: "Creating firewall:", Level: "INFO"})
+		lines = append(lines, Message{Body: "Creating nats:", Level: "INFO"})
 	case "nats.create.done":
 		lines = n.getDetails(components)
 		return append(lines, Message{Body: "Nats created", Level: "INFO"})
