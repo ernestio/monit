@@ -40,22 +40,22 @@ func (n *Instance) Handle(subject string, components []interface{}, lines []Mess
 func (n *Instance) getDetails(components []interface{}) (lines []Message) {
 	for _, v := range components {
 		r := v.(map[string]interface{})
-		ip := r["ip"].(string)
-		name := r["name"].(string)
-		status := r["status"].(string)
+		ip, _ := r["ip"].(string)
+		name, _ := r["name"].(string)
+		status, _ := r["status"].(string)
 		lines = append(lines, Message{Body: " - " + name, Level: ""})
 		lines = append(lines, Message{Body: "   IP        : " + ip, Level: ""})
-		public_ip := r["public_ip"].(string)
+		public_ip, _ := r["public_ip"].(string)
 		if public_ip != "" {
 			lines = append(lines, Message{Body: "   PUBLIC IP : " + public_ip, Level: ""})
 		}
-		id := r["instance_aws_id"].(string)
+		id, _ := r["instance_aws_id"].(string)
 		if id != "" {
 			lines = append(lines, Message{Body: "   AWS ID    : " + id, Level: ""})
 		}
 		lines = append(lines, Message{Body: "   Status    : " + status, Level: ""})
 		if status == "errored" {
-			err := r["error_message"].(string)
+			err, _ := r["error_message"].(string)
 			lines = append(lines, Message{Body: "   Error     : " + err, Level: "ERROR"})
 		}
 	}

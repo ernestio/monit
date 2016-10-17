@@ -26,18 +26,18 @@ func (n *Network) Handle(subject string, components []interface{}, lines []Messa
 func (n *Network) getDetails(components []interface{}) (lines []Message) {
 	for _, v := range components {
 		r := v.(map[string]interface{})
-		ip := r["range"].(string)
-		name := r["name"].(string)
-		status := r["status"].(string)
+		ip, _ := r["range"].(string)
+		name, _ := r["name"].(string)
+		status, _ := r["status"].(string)
 		lines = append(lines, Message{Body: " - " + name, Level: ""})
 		lines = append(lines, Message{Body: "   IP     : " + ip, Level: ""})
-		id := r["network_aws_id"].(string)
+		id, _ := r["network_aws_id"].(string)
 		if id != "" {
 			lines = append(lines, Message{Body: "   AWS ID : " + id, Level: ""})
 		}
 		lines = append(lines, Message{Body: "   Status : " + status, Level: ""})
 		if status == "errored" {
-			err := r["error_message"].(string)
+			err, _ := r["error_message"].(string)
 			lines = append(lines, Message{Body: "   Error     : " + err, Level: "ERROR"})
 		}
 	}
