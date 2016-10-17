@@ -40,12 +40,12 @@ func (n *Nat) Handle(subject string, components []interface{}, lines []Message) 
 func (n *Nat) getDetails(components []interface{}) (lines []Message) {
 	for _, v := range components {
 		r := v.(map[string]interface{})
-		name := r["name"].(string)
-		status := r["status"].(string)
+		name, _ := r["name"].(string)
+		status, _ := r["status"].(string)
 		lines = append(lines, Message{Body: " - " + name, Level: ""})
 		lines = append(lines, Message{Body: "   Status    : " + status, Level: ""})
 		if status == "errored" {
-			err := r["error_message"].(string)
+			err, _ := r["error_message"].(string)
 			lines = append(lines, Message{Body: "   Error     : " + err, Level: "ERROR"})
 		}
 	}

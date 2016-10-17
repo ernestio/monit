@@ -31,14 +31,14 @@ func (n *Vpc) Handle(subject string, components []interface{}, lines []Message) 
 func (n *Vpc) getDetails(components []interface{}) (lines []Message) {
 	for _, v := range components {
 		r := v.(map[string]interface{})
-		id := r["vpc_id"].(string)
-		subnet := r["vpc_subnet"].(string)
-		status := r["status"].(string)
+		id, _ := r["vpc_id"].(string)
+		subnet, _ := r["vpc_subnet"].(string)
+		status, _ := r["status"].(string)
 		lines = append(lines, Message{Body: " - " + id, Level: ""})
 		lines = append(lines, Message{Body: "   Subnet    : " + subnet, Level: ""})
 		lines = append(lines, Message{Body: "   Status    : " + status, Level: ""})
 		if status == "errored" {
-			err := r["error_message"].(string)
+			err, _ := r["error_message"].(string)
 			lines = append(lines, Message{Body: "   Error     : " + err, Level: "ERROR"})
 		}
 	}
