@@ -33,7 +33,9 @@ func (n *Router) getDetails(components []interface{}) (lines []Message) {
 		r := v.(map[string]interface{})
 		name, _ := r["name"].(string)
 		status, _ := r["status"].(string)
+		ip, _ := r["ip"].(string)
 		lines = append(lines, Message{Body: " - " + name, Level: ""})
+		lines = append(lines, Message{Body: "   IP        : " + ip, Level: ""})
 		lines = append(lines, Message{Body: "   Status    : " + status, Level: ""})
 		if status == "errored" {
 			err, _ := r["error_message"].(string)

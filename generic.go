@@ -19,12 +19,12 @@ type genericMessage struct {
 func genericHandler(msg *nats.Msg) {
 	var msgLines []Message
 	var input genericMessage
+	var notification Notification
 
 	if err := json.Unmarshal(msg.Data, &input); err != nil {
 		return
 	}
-	notification, err := processNotification(msg)
-	if err != nil {
+	if err := processNotification(&notification, msg); err != nil {
 		return
 	}
 	input.ID = notification.getServiceID()

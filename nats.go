@@ -12,8 +12,8 @@ import (
 )
 
 func natsHandler(msg *nats.Msg) {
-	notification, err := processNotification(msg)
-	if err != nil {
+	var notification Notification
+	if err := processNotification(&notification, msg); err != nil {
 		return
 	}
 
@@ -24,17 +24,25 @@ func natsHandler(msg *nats.Msg) {
 			publishMessage(notification.getServiceID(), &nm)
 		}
 	case "service.create", "service.delete":
+		var handler Service
 		// Create a new stream
 		log.Println("Creating stream for", notification.getServiceID())
 		s.CreateStream(notification.getServiceID())
+		lines := handler.Handle(msg.Subject, notification.Messages)
+		for _, nm := range lines {
+			publishMessage(notification.getServiceID(), &nm)
+		}
 	case "service.create.done", "service.create.error", "service.delete.done", "service.delete.error":
+		var handler Service
+		lines := handler.Handle(msg.Subject, notification.Messages)
+		for _, nm := range lines {
+			publishMessage(notification.getServiceID(), &nm)
+		}
+		time.Sleep(10 * time.Millisecond)
 		// Remove a new stream when the build completes
 		log.Println("Closing stream for", notification.getServiceID())
 		go func(s *sse.Server) {
-			// Notifications appear out of order, wait for all notifications to come through before closing
-			time.Sleep(time.Second)
 			s.RemoveStream(notification.getServiceID())
 		}(s)
-
 	}
 }

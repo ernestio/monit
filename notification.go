@@ -36,16 +36,9 @@ func (n *Notification) getServiceID() string {
 	return n.ID
 }
 
-func processNotification(msg *nats.Msg) (*Notification, error) {
-	notification := Notification{}
-	err := json.Unmarshal(msg.Data, &notification)
+func processNotification(notification *Notification, msg *nats.Msg) error {
+	return json.Unmarshal(msg.Data, &notification)
 
-	if err != nil {
-		log.Println("Could not process notification: ")
-		log.Println(err)
-	}
-
-	return &notification, err
 }
 
 func publishMessage(service string, msg *Message) {
