@@ -52,7 +52,7 @@ func (n *ELB) getDetails(components []interface{}) (lines []Message) {
 		}
 		lines = append(lines)
 		if status == "errored" {
-			err, _ := r["error_message"].(string)
+			err, _ := r["error"].(string)
 			lines = append(lines, Message{Body: "   Error     : " + err, Level: "ERROR"})
 		}
 	}

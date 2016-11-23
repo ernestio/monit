@@ -93,7 +93,7 @@ func genericErrorMessageHandler(components []interface{}, cType, cAction string)
 		component := c.(map[string]interface{})
 		if component["status"].(string) == "errored" {
 			name := component["name"].(string)
-			msg := component["error_message"].(string)
+			msg := component["error"].(string)
 			msg = strings.Replace(msg, ":", " -", -1)
 			line := cType + " " + name + " " + cAction + " failed with: \n" + msg
 			lines = append(lines, Message{Body: line, Level: "ERROR"})

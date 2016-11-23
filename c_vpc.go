@@ -38,7 +38,7 @@ func (n *Vpc) getDetails(components []interface{}) (lines []Message) {
 		lines = append(lines, Message{Body: "   Subnet    : " + subnet, Level: ""})
 		lines = append(lines, Message{Body: "   Status    : " + status, Level: ""})
 		if status == "errored" {
-			err, _ := r["error_message"].(string)
+			err, _ := r["error"].(string)
 			lines = append(lines, Message{Body: "   Error     : " + err, Level: "ERROR"})
 		}
 	}
