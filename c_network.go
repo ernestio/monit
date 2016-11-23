@@ -14,11 +14,17 @@ func (n *Network) Handle(subject string, components []interface{}, lines []Messa
 	case "networks.create.done":
 		lines = n.getDetails(components)
 		return append(lines, Message{Body: "Networks successfully created", Level: "INFO"})
+	case "networks.create.error":
+		lines = n.getDetails(components)
+		return append(lines, Message{Body: "Networks creation failed", Level: "INFO"})
 	case "networks.delete":
 		return append(lines, Message{Body: "Deleting networks:", Level: "INFO"})
 	case "networks.delete.done":
 		lines = n.getDetails(components)
 		return append(lines, Message{Body: "Networks deleted", Level: "INFO"})
+	case "networks.delete.error":
+		lines = n.getDetails(components)
+		return append(lines, Message{Body: "Networks deletion failed", Level: "INFO"})
 	}
 	return lines
 }
