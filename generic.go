@@ -63,6 +63,12 @@ func genericHandler(msg *nats.Msg) {
 	case "s3s":
 		var n S3Bucket
 		msgLines = n.Handle(msg.Subject, input.Components, msgLines)
+	case "rds_clusters":
+		var n RDSCluster
+		msgLines = n.Handle(msg.Subject, input.Components, msgLines)
+	case "rds_instances":
+		var n RDSInstance
+		msgLines = n.Handle(msg.Subject, input.Components, msgLines)
 	default:
 		switch msg.Subject {
 		case "executions.create.done":
