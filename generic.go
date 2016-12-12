@@ -33,7 +33,7 @@ func genericHandler(msg *nats.Msg) {
 	component := parts[0]
 
 	switch component {
-	case "ebs":
+	case "ebs_volumes":
 		var n EBSVolume
 		msgLines = n.Handle(msg.Subject, input.Components, msgLines)
 	case "instances":
