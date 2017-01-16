@@ -25,6 +25,12 @@ func (n *Service) Handle(subject string, lines []Message) []Message {
 	case "service.delete.error":
 		lines = append(lines, Message{Body: "\nOops! Something went wrong. Please manually fix any errors shown above and re-apply your service deletion.", Level: "INFO"})
 		lines = append(lines, Message{Body: "error", Level: "ERROR"})
+	case "service.import.done":
+		lines = append(lines, Message{Body: "SUCCESS: service successfully imported", Level: "SUCCESS"})
+		lines = append(lines, Message{Body: "error", Level: "ERROR"})
+	case "service.import.error":
+		lines = append(lines, Message{Body: "\nOops! Something went wrong. Please manually fix any errors shown above and re-apply your definition.", Level: "INFO"})
+		lines = append(lines, Message{Body: "error", Level: "ERROR"})
 	}
 	return lines
 }

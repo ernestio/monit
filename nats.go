@@ -32,7 +32,7 @@ func natsHandler(msg *nats.Msg) {
 		for _, nm := range lines {
 			publishMessage(notification.getServiceID(), &nm)
 		}
-	case "service.create.done", "service.create.error", "service.delete.done", "service.delete.error":
+	case "service.create.done", "service.create.error", "service.delete.done", "service.delete.error", "service.import.done", "service.import.error":
 		var handler Service
 		lines := handler.Handle(msg.Subject, notification.Messages)
 		for _, nm := range lines {
