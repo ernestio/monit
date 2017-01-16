@@ -40,6 +40,8 @@ func main() {
 	n.Subscribe("service.create.error", natsHandler)
 	n.Subscribe("service.delete.done", natsHandler)
 	n.Subscribe("service.delete.error", natsHandler)
+	n.Subscribe("service.import.done", natsHandler)
+	n.Subscribe("service.import.error", natsHandler)
 
 	n.Subscribe("*.*", genericHandler)
 	n.Subscribe("*.*.*", genericHandler)
