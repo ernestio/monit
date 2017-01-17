@@ -33,6 +33,14 @@ func (n *RDSInstance) Handle(subject string, components []interface{}, lines []M
 	case "rds_instances.delete.error":
 		lines = n.getDetails(components)
 		return append(lines, Message{Body: "RDS instances deletion failed", Level: "INFO"})
+	case "rds_instances.find":
+		lines = append(lines, Message{Body: "Importing rds instances:", Level: "INFO"})
+	case "rds_instances.find.done":
+		lines = n.getDetails(components)
+		return append(lines, Message{Body: "RDS instances imported", Level: "INFO"})
+	case "rds_instances.find.error":
+		lines = n.getDetails(components)
+		return append(lines, Message{Body: "RDS instances import failed", Level: "INFO"})
 	}
 	return lines
 }

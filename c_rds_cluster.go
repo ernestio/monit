@@ -33,6 +33,14 @@ func (n *RDSCluster) Handle(subject string, components []interface{}, lines []Me
 	case "rds_clusters.delete.error":
 		lines = n.getDetails(components)
 		return append(lines, Message{Body: "RDS clusters deletion failed", Level: "INFO"})
+	case "rds_clusters.find":
+		lines = append(lines, Message{Body: "Importing rds clusters:", Level: "INFO"})
+	case "rds_clusters.find.done":
+		lines = n.getDetails(components)
+		return append(lines, Message{Body: "RDS clusters imported", Level: "INFO"})
+	case "rds_clusters.find.error":
+		lines = n.getDetails(components)
+		return append(lines, Message{Body: "RDS clusters import failed", Level: "INFO"})
 	}
 	return lines
 }

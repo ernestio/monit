@@ -33,6 +33,14 @@ func (n *Nat) Handle(subject string, components []interface{}, lines []Message) 
 	case "nats.delete.error":
 		lines = n.getDetails(components)
 		return append(lines, Message{Body: "Nats deletion failed", Level: "INFO"})
+	case "nats.find":
+		lines = append(lines, Message{Body: "Importing nats:", Level: "INFO"})
+	case "nats.find.done":
+		lines = n.getDetails(components)
+		return append(lines, Message{Body: "Nats imported", Level: "INFO"})
+	case "nats.find.error":
+		lines = n.getDetails(components)
+		return append(lines, Message{Body: "Nats import failed", Level: "INFO"})
 	}
 	return lines
 }

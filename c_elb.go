@@ -33,6 +33,14 @@ func (n *ELB) Handle(subject string, components []interface{}, lines []Message) 
 	case "elbs.delete.error":
 		lines = n.getDetails(components)
 		return append(lines, Message{Body: "ELBs deletion failed", Level: "INFO"})
+	case "elbs.find":
+		lines = append(lines, Message{Body: "Importing ELBs:", Level: "INFO"})
+	case "elbs.find.done":
+		lines = n.getDetails(components)
+		return append(lines, Message{Body: "ELBs imported", Level: "INFO"})
+	case "elbs.find.error":
+		lines = n.getDetails(components)
+		return append(lines, Message{Body: "ELBs import failed", Level: "INFO"})
 	}
 	return lines
 }

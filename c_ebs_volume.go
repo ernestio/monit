@@ -25,6 +25,14 @@ func (v *EBSVolume) Handle(subject string, components []interface{}, lines []Mes
 	case "ebs_volumes.delete.error":
 		lines = v.getDetails(components)
 		return append(lines, Message{Body: "EBS volumes deletion failed", Level: "INFO"})
+	case "ebs_volumes.find":
+		return append(lines, Message{Body: "Importing ebs volumes:", Level: "INFO"})
+	case "ebs_volumes.find.done":
+		lines = v.getDetails(components)
+		return append(lines, Message{Body: "EBS volumes successfully imported", Level: "INFO"})
+	case "ebs_volumes.find.error":
+		lines = v.getDetails(components)
+		return append(lines, Message{Body: "EBS volumes import failed", Level: "INFO"})
 	}
 	return lines
 }

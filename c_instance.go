@@ -33,6 +33,14 @@ func (n *Instance) Handle(subject string, components []interface{}, lines []Mess
 	case "instances.delete.error":
 		lines = n.getDetails(components)
 		return append(lines, Message{Body: "Instances deletion failed", Level: "INFO"})
+	case "instances.find":
+		lines = append(lines, Message{Body: "Importing instances:", Level: "INFO"})
+	case "instances.find.done":
+		lines = n.getDetails(components)
+		return append(lines, Message{Body: "Instances successfully imported", Level: "INFO"})
+	case "instances.find.error":
+		lines = n.getDetails(components)
+		return append(lines, Message{Body: "Instances import failed", Level: "INFO"})
 	}
 	return lines
 }

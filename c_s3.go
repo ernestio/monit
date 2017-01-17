@@ -33,6 +33,14 @@ func (n *S3Bucket) Handle(subject string, components []interface{}, lines []Mess
 	case "s3s.delete.error":
 		lines = n.getDetails(components)
 		return append(lines, Message{Body: "S3 buckets deletion failed", Level: "INFO"})
+	case "s3s.find":
+		lines = append(lines, Message{Body: "Importing s3 buckets:", Level: "INFO"})
+	case "s3s.find.done":
+		lines = n.getDetails(components)
+		return append(lines, Message{Body: "S3 buckets imported", Level: "INFO"})
+	case "s3s.find.error":
+		lines = n.getDetails(components)
+		return append(lines, Message{Body: "S3 buckets import failed", Level: "INFO"})
 	}
 	return lines
 }

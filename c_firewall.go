@@ -33,6 +33,14 @@ func (n *Firewall) Handle(subject string, components []interface{}, lines []Mess
 	case "firewalls.delete.error":
 		lines = n.getDetails(components)
 		return append(lines, Message{Body: "Firewalls deletion failed", Level: "INFO"})
+	case "firewalls.find":
+		lines = append(lines, Message{Body: "Importing firewalls:", Level: "INFO"})
+	case "firewalls.find.done":
+		lines = n.getDetails(components)
+		return append(lines, Message{Body: "Firewalls imported", Level: "INFO"})
+	case "firewalls.find.error":
+		lines = n.getDetails(components)
+		return append(lines, Message{Body: "Firewalls import failed", Level: "INFO"})
 	}
 	return lines
 }

@@ -24,6 +24,14 @@ func (n *Vpc) Handle(subject string, components []interface{}, lines []Message) 
 	case "vpcs.delete.error":
 		lines = n.getDetails(components)
 		return append(lines, Message{Body: "Vpc deletion failed", Level: "INFO"})
+	case "vpcs.find":
+		lines = append(lines, Message{Body: "Importing Vpc:", Level: "INFO"})
+	case "vpcs.find.done":
+		lines = n.getDetails(components)
+		return append(lines, Message{Body: "Vpc imported", Level: "INFO"})
+	case "vpcs.find.error":
+		lines = n.getDetails(components)
+		return append(lines, Message{Body: "Vpc import failed", Level: "INFO"})
 	}
 	return lines
 }

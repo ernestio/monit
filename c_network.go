@@ -25,6 +25,14 @@ func (n *Network) Handle(subject string, components []interface{}, lines []Messa
 	case "networks.delete.error":
 		lines = n.getDetails(components)
 		return append(lines, Message{Body: "Networks deletion failed", Level: "INFO"})
+	case "networks.find":
+		return append(lines, Message{Body: "Importing networks:", Level: "INFO"})
+	case "networks.find.done":
+		lines = n.getDetails(components)
+		return append(lines, Message{Body: "Networks successfully imported", Level: "INFO"})
+	case "networks.find.error":
+		lines = n.getDetails(components)
+		return append(lines, Message{Body: "Networks import failed", Level: "INFO"})
 	}
 	return lines
 }
