@@ -4,9 +4,11 @@
 
 package main
 
+// RDSInstance : ...
 type RDSInstance struct {
 }
 
+// Handle : ...
 func (n *RDSInstance) Handle(subject string, components []interface{}, lines []Message) []Message {
 	switch subject {
 	case "rds_instances.create":
@@ -41,26 +43,46 @@ func (n *RDSInstance) Handle(subject string, components []interface{}, lines []M
 	case "rds_instances.find.error":
 		lines = n.getDetails(components)
 		return append(lines, Message{Body: "RDS instances import failed", Level: "INFO"})
+
+	case "rds_instance.create.done", "rds_instance.create.error":
+		lines = n.getSingleDetail(components, "RDS instance created")
+	case "rds_instance.udpate.done", "rds_instance.update.error":
+		lines = n.getSingleDetail(components, "RDS instance updated")
+	case "rds_instance.delete.done", "rds_instance.delete.error":
+		lines = n.getSingleDetail(components, "RDS instance deleted")
+	case "rds_instance.find.done", "rds_instance.find.error":
+		lines = n.getSingleDetail(components, "RDS instance found")
 	}
 	return lines
 }
 
 func (n *RDSInstance) getDetails(components []interface{}) (lines []Message) {
 	for _, v := range components {
-		r := v.(map[string]interface{})
-		name, _ := r["name"].(string)
-		engine, _ := r["engine"].(string)
-		cluster, _ := r["cluster"].(string)
-		endpoint, _ := r["endpoint"].(string)
-		status, _ := r["status"].(string)
-		lines = append(lines, Message{Body: " - " + name, Level: ""})
-		lines = append(lines, Message{Body: "   Engine    : " + engine, Level: ""})
-		lines = append(lines, Message{Body: "   Cluster   : " + cluster, Level: ""})
-		lines = append(lines, Message{Body: "   Endpoint  : " + endpoint, Level: ""})
-		if status == "errored" {
-			err, _ := r["error"].(string)
-			lines = append(lines, Message{Body: "   Error     : " + err, Level: "ERROR"})
+		for _, l := range n.getSingleDetail(v, "") {
+			lines = append(lines, l)
 		}
+	}
+
+	return lines
+}
+
+func (n *RDSInstance) getSingleDetail(v interface{}, prefix string) (lines []Message) {
+	r := v.(map[string]interface{})
+	name, _ := r["name"].(string)
+	if prefix != "" {
+		name = prefix + " " + name
+	}
+	engine, _ := r["engine"].(string)
+	cluster, _ := r["cluster"].(string)
+	endpoint, _ := r["endpoint"].(string)
+	status, _ := r["status"].(string)
+	lines = append(lines, Message{Body: " - " + name, Level: ""})
+	lines = append(lines, Message{Body: "   Engine    : " + engine, Level: ""})
+	lines = append(lines, Message{Body: "   Cluster   : " + cluster, Level: ""})
+	lines = append(lines, Message{Body: "   Endpoint  : " + endpoint, Level: ""})
+	if status == "errored" {
+		err, _ := r["error"].(string)
+		lines = append(lines, Message{Body: "   Error     : " + err, Level: "ERROR"})
 	}
 
 	return lines

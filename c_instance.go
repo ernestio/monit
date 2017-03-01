@@ -4,9 +4,11 @@
 
 package main
 
+// Instance : ...
 type Instance struct {
 }
 
+// Handle : ...
 func (n *Instance) Handle(subject string, components []interface{}, lines []Message) []Message {
 	switch subject {
 	case "instances.create":
@@ -41,32 +43,51 @@ func (n *Instance) Handle(subject string, components []interface{}, lines []Mess
 	case "instances.find.error":
 		lines = n.getDetails(components)
 		return append(lines, Message{Body: "Instances import failed", Level: "INFO"})
+
+	case "instance.create.done", "instance.create.error":
+		lines = n.getSingleDetail(components, "Instance created")
+	case "instance.update.done", "instance.update.error":
+		lines = n.getSingleDetail(components, "Instance udpated")
+	case "instance.delete.done", "instance.delete.error":
+		lines = n.getSingleDetail(components, "Instance delete")
+	case "instance.find.done", "instance.find.error":
+		lines = n.getSingleDetail(components, "Instance find")
 	}
 	return lines
 }
 
 func (n *Instance) getDetails(components []interface{}) (lines []Message) {
 	for _, v := range components {
-		r := v.(map[string]interface{})
-		ip, _ := r["ip"].(string)
-		name, _ := r["name"].(string)
-		status, _ := r["status"].(string)
-		lines = append(lines, Message{Body: " - " + name, Level: ""})
-		lines = append(lines, Message{Body: "   IP        : " + ip, Level: ""})
-		public_ip, _ := r["public_ip"].(string)
-		if public_ip != "" {
-			lines = append(lines, Message{Body: "   PUBLIC IP : " + public_ip, Level: ""})
-		}
-		id, _ := r["instance_aws_id"].(string)
-		if id != "" {
-			lines = append(lines, Message{Body: "   AWS ID    : " + id, Level: ""})
-		}
-		lines = append(lines, Message{Body: "   Status    : " + status, Level: ""})
-		if status == "errored" {
-			err, _ := r["error"].(string)
-			lines = append(lines, Message{Body: "   Error     : " + err, Level: "ERROR"})
+		for _, l := range n.getSingleDetail(v, "") {
+			lines = append(lines, l)
 		}
 	}
 
+	return lines
+}
+
+func (n *Instance) getSingleDetail(v interface{}, prefix string) (lines []Message) {
+	r := v.(map[string]interface{})
+	ip, _ := r["ip"].(string)
+	name, _ := r["name"].(string)
+	if prefix != "" {
+		name = prefix + " " + name
+	}
+	status, _ := r["status"].(string)
+	lines = append(lines, Message{Body: " - " + name, Level: ""})
+	lines = append(lines, Message{Body: "   IP        : " + ip, Level: ""})
+	publicIP, _ := r["public_ip"].(string)
+	if publicIP != "" {
+		lines = append(lines, Message{Body: "   PUBLIC IP : " + publicIP, Level: ""})
+	}
+	id, _ := r["instance_aws_id"].(string)
+	if id != "" {
+		lines = append(lines, Message{Body: "   AWS ID    : " + id, Level: ""})
+	}
+	lines = append(lines, Message{Body: "   Status    : " + status, Level: ""})
+	if status == "errored" {
+		err, _ := r["error"].(string)
+		lines = append(lines, Message{Body: "   Error     : " + err, Level: "ERROR"})
+	}
 	return lines
 }
