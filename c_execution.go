@@ -11,28 +11,9 @@ type Execution struct {
 // Handle : ...
 func (n *Execution) Handle(subject string, components []interface{}, lines []Message) []Message {
 	switch subject {
-	case "executions.create":
-		lines = append(lines, Message{Body: "Running executions:", Level: "INFO"})
-	case "executions.create.done":
-		lines = n.getDetails(components)
-		return append(lines, Message{Body: "Executions ran", Level: "INFO"})
-	case "executions.create.error":
-		lines = n.getDetails(components)
-		return append(lines, Message{Body: "Executions failed", Level: "INFO"})
-
 	case "execution.create.done", "execution.create.error":
 		lines = n.getSingleDetail(components, "Ran execution")
 	}
-	return lines
-}
-
-func (n *Execution) getDetails(components []interface{}) (lines []Message) {
-	for _, v := range components {
-		for _, l := range n.getSingleDetail(v, "") {
-			lines = append(lines, l)
-		}
-	}
-
 	return lines
 }
 

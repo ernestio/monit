@@ -11,39 +11,6 @@ type Firewall struct {
 // Handle : ...
 func (n *Firewall) Handle(subject string, components []interface{}, lines []Message) []Message {
 	switch subject {
-	case "firewalls.create":
-		lines = append(lines, Message{Body: "Creating firewalls:", Level: "INFO"})
-	case "firewalls.create.done":
-		lines = n.getDetails(components)
-		return append(lines, Message{Body: "Firewalls created", Level: "INFO"})
-	case "firewalls.create.error":
-		lines = n.getDetails(components)
-		return append(lines, Message{Body: "Firewalls creation failed", Level: "INFO"})
-	case "firewalls.update":
-		return append(lines, Message{Body: "Updating firewalls:", Level: "INFO"})
-	case "firewalls.update.done":
-		lines = n.getDetails(components)
-		return append(lines, Message{Body: "Firewalls updated", Level: "INFO"})
-	case "firewalls.update.error":
-		lines = n.getDetails(components)
-		return append(lines, Message{Body: "Firewalls modification failed", Level: "INFO"})
-	case "firewalls.delete":
-		return append(lines, Message{Body: "Deleting firewalls:", Level: "INFO"})
-	case "firewalls.delete.done":
-		lines = n.getDetails(components)
-		return append(lines, Message{Body: "Firewalls deleted", Level: "INFO"})
-	case "firewalls.delete.error":
-		lines = n.getDetails(components)
-		return append(lines, Message{Body: "Firewalls deletion failed", Level: "INFO"})
-	case "firewalls.find":
-		lines = append(lines, Message{Body: "Importing firewalls:", Level: "INFO"})
-	case "firewalls.find.done":
-		lines = n.getDetails(components)
-		return append(lines, Message{Body: "Firewalls imported", Level: "INFO"})
-	case "firewalls.find.error":
-		lines = n.getDetails(components)
-		return append(lines, Message{Body: "Firewalls import failed", Level: "INFO"})
-
 	case "firewall.create.done", "firewall.create.error":
 		lines = n.getSingleDetail(components, "Firewall created")
 	case "firewall.update.done", "firewall.update.error":
@@ -53,16 +20,6 @@ func (n *Firewall) Handle(subject string, components []interface{}, lines []Mess
 	case "firewall.find.done", "firewall.find.error":
 		lines = n.getSingleDetail(components, "Firewall found")
 	}
-	return lines
-}
-
-func (n *Firewall) getDetails(components []interface{}) (lines []Message) {
-	for _, v := range components {
-		for _, l := range n.getSingleDetail(v, "") {
-			lines = append(lines, l)
-		}
-	}
-
 	return lines
 }
 

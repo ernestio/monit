@@ -11,35 +11,12 @@ type Router struct {
 // Handle : ...
 func (n *Router) Handle(subject string, components []interface{}, lines []Message) []Message {
 	switch subject {
-	case "routers.create":
-		lines = append(lines, Message{Body: "Creating routers:", Level: "INFO"})
-	case "routers.create.done":
-		lines = n.getDetails(components)
-		return append(lines, Message{Body: "Routers created", Level: "INFO"})
-	case "routers.create.error":
-		lines = n.getDetails(components)
-		return append(lines, Message{Body: "Routers creation failed", Level: "INFO"})
-	case "routers.delete":
-		return append(lines, Message{Body: "Deleting routers:", Level: "INFO"})
-	case "routers.delete.done":
-		return append(lines, Message{Body: "Routers deleted", Level: "INFO"})
-	case "routers.delete.error":
-		lines = n.getDetails(components)
-		return append(lines, Message{Body: "Routers deletion failed", Level: "INFO"})
 
 	case "router.create.done", "router.create.error":
 		lines = n.getSingleDetail(components, "Created router")
 	case "router.delete.done", "router.delete.error":
 		lines = n.getSingleDetail(components, "Deleted router")
 	}
-	return lines
-}
-
-func (n *Router) getDetails(components []interface{}) (lines []Message) {
-	for _, v := range components {
-		lines = append(lines, n.getSingleDetail(v, "")...)
-	}
-
 	return lines
 }
 
