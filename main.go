@@ -6,6 +6,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/nats-io/nats"
@@ -17,6 +18,7 @@ var s *sse.Server
 var host string
 var port string
 var secret string
+var err error
 
 func main() {
 	setup()
@@ -33,20 +35,64 @@ func main() {
 	mux.HandleFunc("/events", authMiddleware)
 
 	// Start nats handler, subscribe to all events related with the monitor
-	n.Subscribe("monitor.user", natsHandler)
-	n.Subscribe("service.create", natsHandler)
-	n.Subscribe("service.delete", natsHandler)
-	n.Subscribe("service.create.done", natsHandler)
-	n.Subscribe("service.create.error", natsHandler)
-	n.Subscribe("service.delete.done", natsHandler)
-	n.Subscribe("service.delete.error", natsHandler)
-	n.Subscribe("service.import.done", natsHandler)
-	n.Subscribe("service.import.error", natsHandler)
+	_, err = n.Subscribe("monitor.user", natsHandler)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	_, err = n.Subscribe("service.create", natsHandler)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	_, err = n.Subscribe("service.delete", natsHandler)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	_, err = n.Subscribe("service.create.done", natsHandler)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	_, err = n.Subscribe("service.create.error", natsHandler)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	_, err = n.Subscribe("service.delete.done", natsHandler)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	_, err = n.Subscribe("service.delete.error", natsHandler)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	_, err = n.Subscribe("service.import.done", natsHandler)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	_, err = n.Subscribe("service.import.error", natsHandler)
+	if err != nil {
+		log.Println(err)
+		return
+	}
 
-	n.Subscribe("*.*", genericHandler)
-	n.Subscribe("*.*.*", genericHandler)
+	_, err = n.Subscribe("*.*", genericHandler)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	_, err = n.Subscribe("*.*.*", genericHandler)
+	if err != nil {
+		log.Println(err)
+		return
+	}
 
 	// Start Listening
 	addr := fmt.Sprintf("%s:%s", host, port)
-	http.ListenAndServe(addr, mux)
+	_ = http.ListenAndServe(addr, mux)
 }

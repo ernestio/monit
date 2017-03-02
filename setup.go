@@ -42,7 +42,9 @@ func setup() {
 	if err != nil {
 		panic("Can't get monitor config")
 	}
-	json.Unmarshal(msg.Data, &cfg)
+	if err := json.Unmarshal(msg.Data, &cfg); err != nil {
+		panic("Can't process monitor config")
+	}
 
 	host = cfg.Host
 	port = cfg.Port

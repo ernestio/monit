@@ -99,7 +99,9 @@ func TestMain(t *testing.T) {
 					s.CreateStream("test")
 					time.Sleep(time.Millisecond * 10)
 
-					go cl.SubscribeChan("test", rcv)
+					go func() {
+						_ = cl.SubscribeChan("test", rcv)
+					}()
 					time.Sleep(time.Millisecond * 10)
 
 					Convey("It should publish a message to the stream", func() {
@@ -120,7 +122,9 @@ func TestMain(t *testing.T) {
 
 					time.Sleep(time.Millisecond * 10)
 
-					go cl.SubscribeChan("test", rcv)
+					go func() {
+						_ = cl.SubscribeChan("test", rcv)
+					}()
 					time.Sleep(time.Millisecond * 10)
 
 					Convey("It should not publish a message to the stream", func() {
