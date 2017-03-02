@@ -4,9 +4,11 @@
 
 package main
 
+// Service : ...
 type Service struct {
 }
 
+// Handle : ...
 func (n *Service) Handle(subject string, lines []Message) []Message {
 	switch subject {
 	case "service.create":

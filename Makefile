@@ -9,7 +9,8 @@ deps: dev-deps
 
 dev-deps:
 	go get github.com/smartystreets/goconvey/convey
-	go get github.com/golang/lint/golint
+	go get github.com/alecthomas/gometalinter
+	gometalinter --install
 
 cover:
 	go test -v ./... --cover
@@ -21,5 +22,5 @@ build:
 	go build -v ./...
 
 lint:
-	golint ./...
-	go vet ./...
+	gometalinter --config .linter.conf
+
