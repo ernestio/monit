@@ -5,6 +5,7 @@
 package main
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"log"
 	"strings"
@@ -42,12 +43,14 @@ func processNotification(notification *Notification, msg *nats.Msg) error {
 }
 
 func publishMessage(service string, msg *Message) {
-	data, err := json.Marshal(msg)
+	var encodedOutput []byte
 
+	data, err := json.Marshal(msg)
 	if err != nil {
 		log.Println("Could not encode message: ")
 		log.Println(err)
 	} else {
-		s.Publish(service, data)
+		base64.StdEncoding.Encode(encodedOutput, data)
+		s.Publish(service, encodedOutput)
 	}
 }
