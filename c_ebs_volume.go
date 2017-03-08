@@ -4,18 +4,22 @@
 
 package main
 
+import "strings"
+
 // EBSVolume : ...
 type EBSVolume struct {
 }
 
 // Handle : ...
 func (n *EBSVolume) Handle(subject string, components []interface{}, lines []Message) []Message {
+	parts := strings.Split(subject, ".")
+	subject = parts[0] + "." + parts[1]
 	switch subject {
-	case "ebs_volume.create.done", "ebs_volume.create.error":
+	case "ebs_volume.create":
 		lines = n.getSingleDetail(components, "Created EBS volume ")
-	case "ebs_volume.delete.done", "ebs_volume.delete.error":
+	case "ebs_volume.delete":
 		lines = n.getSingleDetail(components, "Deleted EBS volume ")
-	case "ebs_volume.find.done", "ebs_volume.find.error":
+	case "ebs_volume.find":
 		lines = n.getSingleDetail(components, "Found EBS volume ")
 	}
 	return lines

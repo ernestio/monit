@@ -4,20 +4,24 @@
 
 package main
 
+import "strings"
+
 // Nat : ...
 type Nat struct {
 }
 
 // Handle : ...
 func (n *Nat) Handle(subject string, components []interface{}, lines []Message) []Message {
+	parts := strings.Split(subject, ".")
+	subject = parts[0] + "." + parts[1]
 	switch subject {
-	case "nat.create.done", "nat.create.error":
+	case "nat.create":
 		lines = n.getSingleDetail(components, "Nat created")
-	case "nat.update.done", "nat.update.error":
+	case "nat.update":
 		lines = n.getSingleDetail(components, "Nat updated")
-	case "nat.delete.done", "nat.delete.error":
+	case "nat.delete":
 		lines = n.getSingleDetail(components, "Nat deleted")
-	case "nat.find.done", "nat.find.error":
+	case "nat.find":
 		lines = n.getSingleDetail(components, "Nat created")
 	}
 	return lines

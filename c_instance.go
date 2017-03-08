@@ -4,20 +4,24 @@
 
 package main
 
+import "strings"
+
 // Instance : ...
 type Instance struct {
 }
 
 // Handle : ...
 func (n *Instance) Handle(subject string, components []interface{}, lines []Message) []Message {
+	parts := strings.Split(subject, ".")
+	subject = parts[0] + "." + parts[1]
 	switch subject {
-	case "instance.create.done", "instance.create.error":
+	case "instance.create":
 		lines = n.getSingleDetail(components, "Instance created")
-	case "instance.update.done", "instance.update.error":
+	case "instance.update":
 		lines = n.getSingleDetail(components, "Instance udpated")
-	case "instance.delete.done", "instance.delete.error":
+	case "instance.delete":
 		lines = n.getSingleDetail(components, "Instance delete")
-	case "instance.find.done", "instance.find.error":
+	case "instance.find":
 		lines = n.getSingleDetail(components, "Instance find")
 	}
 	return lines

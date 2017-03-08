@@ -4,14 +4,18 @@
 
 package main
 
+import "strings"
+
 // Bootstrap : ..
 type Bootstrap struct {
 }
 
 // Handle : ..
 func (n *Bootstrap) Handle(subject string, components []interface{}, lines []Message) []Message {
+	parts := strings.Split(subject, ".")
+	subject = parts[0] + "." + parts[1]
 	switch subject {
-	case "bootstrap.create.done", "bootstrap.create.error":
+	case "bootstrap.create":
 		lines = n.getSingleDetail(components, "Bootstrap ran")
 	}
 

@@ -4,14 +4,18 @@
 
 package main
 
+import "strings"
+
 // Execution : ...
 type Execution struct {
 }
 
 // Handle : ...
 func (n *Execution) Handle(subject string, components []interface{}, lines []Message) []Message {
+	parts := strings.Split(subject, ".")
+	subject = parts[0] + "." + parts[1]
 	switch subject {
-	case "execution.create.done", "execution.create.error":
+	case "execution.create":
 		lines = n.getSingleDetail(components, "Ran execution")
 	}
 	return lines

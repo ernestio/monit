@@ -4,20 +4,24 @@
 
 package main
 
+import "strings"
+
 // RDSCluster : ...
 type RDSCluster struct {
 }
 
 // Handle : ...
 func (n *RDSCluster) Handle(subject string, components []interface{}, lines []Message) []Message {
+	parts := strings.Split(subject, ".")
+	subject = parts[0] + "." + parts[1]
 	switch subject {
-	case "rds_cluster.create.done", "rds_cluster.create.error":
+	case "rds_cluster.create":
 		lines = n.getSingleDetail(components, "RDS cluster created")
-	case "rds_cluster.update.done", "rds_cluster.update.error":
+	case "rds_cluster.update":
 		lines = n.getSingleDetail(components, "RDS cluster updated")
-	case "rds_cluster.delete.done", "rds_cluster.delete.error":
+	case "rds_cluster.delete":
 		lines = n.getSingleDetail(components, "RDS cluster deleted")
-	case "rds_cluster.find.done", "rds_cluster.find.error":
+	case "rds_cluster.find":
 		lines = n.getSingleDetail(components, "RDS cluster found")
 	}
 	return lines

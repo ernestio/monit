@@ -4,20 +4,24 @@
 
 package main
 
+import "strings"
+
 // RDSInstance : ...
 type RDSInstance struct {
 }
 
 // Handle : ...
 func (n *RDSInstance) Handle(subject string, components []interface{}, lines []Message) []Message {
+	parts := strings.Split(subject, ".")
+	subject = parts[0] + "." + parts[1]
 	switch subject {
-	case "rds_instance.create.done", "rds_instance.create.error":
+	case "rds_instance.create":
 		lines = n.getSingleDetail(components, "RDS instance created")
-	case "rds_instance.udpate.done", "rds_instance.update.error":
+	case "rds_instance.udpate":
 		lines = n.getSingleDetail(components, "RDS instance updated")
-	case "rds_instance.delete.done", "rds_instance.delete.error":
+	case "rds_instance.delete":
 		lines = n.getSingleDetail(components, "RDS instance deleted")
-	case "rds_instance.find.done", "rds_instance.find.error":
+	case "rds_instance.find":
 		lines = n.getSingleDetail(components, "RDS instance found")
 	}
 	return lines

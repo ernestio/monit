@@ -4,20 +4,24 @@
 
 package main
 
+import "strings"
+
 // S3Bucket : ...
 type S3Bucket struct {
 }
 
 // Handle : ...
 func (n *S3Bucket) Handle(subject string, components []interface{}, lines []Message) []Message {
+	parts := strings.Split(subject, ".")
+	subject = parts[0] + "." + parts[1]
 	switch subject {
-	case "s3.create.done", "s3.create.error":
+	case "s3.create":
 		lines = n.getSingleDetail(components, "S3 bucket created")
-	case "s3.update.done", "s3.update.error":
+	case "s3.update":
 		lines = n.getSingleDetail(components, "S3 bucket updated")
-	case "s3.delete.done", "s3.delete.error":
+	case "s3.delete":
 		lines = n.getSingleDetail(components, "S3 bucket deleted")
-	case "s3.find.done", "s3.find.error":
+	case "s3.find":
 		lines = n.getSingleDetail(components, "S3 bucket imported")
 	}
 	return lines
