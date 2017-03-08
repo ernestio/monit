@@ -4,17 +4,21 @@
 
 package main
 
+import "strings"
+
 // Router : ...
 type Router struct {
 }
 
 // Handle : ...
 func (n *Router) Handle(subject string, components []interface{}, lines []Message) []Message {
+	parts := strings.Split(subject, ".")
+	subject = parts[0] + "." + parts[1]
 	switch subject {
 
-	case "router.create.done", "router.create.error":
+	case "router.create":
 		lines = n.getSingleDetail(components, "Created router")
-	case "router.delete.done", "router.delete.error":
+	case "router.delete":
 		lines = n.getSingleDetail(components, "Deleted router")
 	}
 	return lines

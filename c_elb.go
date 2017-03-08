@@ -4,20 +4,24 @@
 
 package main
 
+import "strings"
+
 // ELB : ...
 type ELB struct {
 }
 
 // Handle : ...
 func (n *ELB) Handle(subject string, components []interface{}, lines []Message) []Message {
+	parts := strings.Split(subject, ".")
+	subject = parts[0] + "." + parts[1]
 	switch subject {
-	case "elb.create.done", "elb.create.error":
+	case "elb.create":
 		lines = n.getSingleDetail(components, "Created ELB")
-	case "elb.update.done", "elb.update.error":
+	case "elb.update":
 		lines = n.getSingleDetail(components, "Updated ELB")
-	case "elb.delete.done", "elb.delete.error":
+	case "elb.delete":
 		lines = n.getSingleDetail(components, "Deleted ELB")
-	case "elb.find.done", "elb.find.error":
+	case "elb.find":
 		lines = n.getSingleDetail(components, "Found ELB")
 
 	}

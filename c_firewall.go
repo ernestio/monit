@@ -4,20 +4,24 @@
 
 package main
 
+import "strings"
+
 // Firewall : ...
 type Firewall struct {
 }
 
 // Handle : ...
 func (n *Firewall) Handle(subject string, components []interface{}, lines []Message) []Message {
+	parts := strings.Split(subject, ".")
+	subject = parts[0] + "." + parts[1]
 	switch subject {
-	case "firewall.create.done", "firewall.create.error":
+	case "firewall.create":
 		lines = n.getSingleDetail(components, "Firewall created")
-	case "firewall.update.done", "firewall.update.error":
+	case "firewall.update":
 		lines = n.getSingleDetail(components, "Firewall updated")
-	case "firewall.delete.done", "firewall.delete.error":
+	case "firewall.delete":
 		lines = n.getSingleDetail(components, "Firewall deleted")
-	case "firewall.find.done", "firewall.find.error":
+	case "firewall.find":
 		lines = n.getSingleDetail(components, "Firewall found")
 	}
 	return lines

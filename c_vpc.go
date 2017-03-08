@@ -4,20 +4,24 @@
 
 package main
 
+import "strings"
+
 // Vpc : ...
 type Vpc struct {
 }
 
 // Handle : ...
 func (n *Vpc) Handle(subject string, components []interface{}, lines []Message) []Message {
+	parts := strings.Split(subject, ".")
+	subject = parts[0] + "." + parts[1]
 	switch subject {
-	case "vpc.create.done", "vpc.create.error":
+	case "vpc.create":
 		lines = n.getSingleDetail(components, "VPC created")
-	case "vpc.update.done", "vpc.update.error":
+	case "vpc.update":
 		lines = n.getSingleDetail(components, "VPC udpated")
-	case "vpc.delete.done", "vpc.delete.error":
+	case "vpc.delete":
 		lines = n.getSingleDetail(components, "VPC deleted")
-	case "vpc.find.done", "vpc.find.error":
+	case "vpc.find":
 		lines = n.getSingleDetail(components, "VPC Found")
 	}
 	return lines
