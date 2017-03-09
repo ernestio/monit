@@ -21,7 +21,7 @@ func (n *Firewall) Handle(subject string, component interface{}, lines []Message
 		lines = n.getSingleDetail(component, "Firewall updated")
 	case "firewall.delete":
 		lines = n.getSingleDetail(component, "Firewall deleted")
-	case "firewall.find":
+	case "firewalls.find":
 		lines = n.getSingleDetail(component, "Firewall found")
 	}
 	return lines

@@ -21,7 +21,7 @@ func (n *Nat) Handle(subject string, component interface{}, lines []Message) []M
 		lines = n.getSingleDetail(component, "Nat updated")
 	case "nat.delete":
 		lines = n.getSingleDetail(component, "Nat deleted")
-	case "nat.find":
+	case "nats.find":
 		lines = n.getSingleDetail(component, "Nat created")
 	}
 	return lines

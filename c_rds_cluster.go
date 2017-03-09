@@ -21,7 +21,7 @@ func (n *RDSCluster) Handle(subject string, component interface{}, lines []Messa
 		lines = n.getSingleDetail(component, "RDS cluster updated")
 	case "rds_cluster.delete":
 		lines = n.getSingleDetail(component, "RDS cluster deleted")
-	case "rds_cluster.find":
+	case "rds_clusters.find":
 		lines = n.getSingleDetail(component, "RDS cluster found")
 	}
 	return lines

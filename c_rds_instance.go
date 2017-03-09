@@ -21,7 +21,7 @@ func (n *RDSInstance) Handle(subject string, component interface{}, lines []Mess
 		lines = n.getSingleDetail(component, "RDS instance updated")
 	case "rds_instance.delete":
 		lines = n.getSingleDetail(component, "RDS instance deleted")
-	case "rds_instance.find":
+	case "rds_instances.find":
 		lines = n.getSingleDetail(component, "RDS instance found")
 	}
 	return lines

@@ -19,7 +19,7 @@ func (n *Network) Handle(subject string, component interface{}, lines []Message)
 		lines = n.getSingleDetail(component, "Network created")
 	case "network.delete":
 		lines = n.getSingleDetail(component, "Network deleted")
-	case "network.find":
+	case "networks.find":
 		lines = n.getSingleDetail(component, "Network found")
 	}
 	return lines

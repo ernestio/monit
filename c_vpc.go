@@ -21,7 +21,7 @@ func (n *Vpc) Handle(subject string, component interface{}, lines []Message) []M
 		lines = n.getSingleDetail(component, "VPC udpated")
 	case "vpc.delete":
 		lines = n.getSingleDetail(component, "VPC deleted")
-	case "vpc.find":
+	case "vpcs.find":
 		lines = n.getSingleDetail(component, "VPC Found")
 	}
 	return lines

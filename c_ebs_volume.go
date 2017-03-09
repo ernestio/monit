@@ -19,7 +19,7 @@ func (n *EBSVolume) Handle(subject string, component interface{}, lines []Messag
 		lines = n.getSingleDetail(component, "Created EBS volume ")
 	case "ebs_volume.delete":
 		lines = n.getSingleDetail(component, "Deleted EBS volume ")
-	case "ebs_volume.find":
+	case "ebs_volumes.find":
 		lines = n.getSingleDetail(component, "Found EBS volume ")
 	}
 	return lines

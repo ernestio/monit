@@ -18,7 +18,7 @@ func (n *Router) Handle(subject string, component interface{}, lines []Message) 
 
 	case "router.create":
 		lines = n.getSingleDetail(component, "Created router")
-	case "router.delete":
+	case "routers.delete":
 		lines = n.getSingleDetail(component, "Deleted router")
 	}
 	return lines

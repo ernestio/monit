@@ -21,7 +21,7 @@ func (n *ELB) Handle(subject string, component interface{}, lines []Message) []M
 		lines = n.getSingleDetail(component, "Updated ELB")
 	case "elb.delete":
 		lines = n.getSingleDetail(component, "Deleted ELB")
-	case "elb.find":
+	case "elbs.find":
 		lines = n.getSingleDetail(component, "Found ELB")
 
 	}

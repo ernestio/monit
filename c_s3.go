@@ -21,7 +21,7 @@ func (n *S3Bucket) Handle(subject string, component interface{}, lines []Message
 		lines = n.getSingleDetail(component, "S3 bucket updated")
 	case "s3.delete":
 		lines = n.getSingleDetail(component, "S3 bucket deleted")
-	case "s3.find":
+	case "s3s.find":
 		lines = n.getSingleDetail(component, "S3 bucket imported")
 	}
 	return lines

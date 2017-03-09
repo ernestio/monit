@@ -21,7 +21,7 @@ func (n *Instance) Handle(subject string, component interface{}, lines []Message
 		lines = n.getSingleDetail(component, "Instance udpated")
 	case "instance.delete":
 		lines = n.getSingleDetail(component, "Instance delete")
-	case "instance.find":
+	case "instances.find":
 		lines = n.getSingleDetail(component, "Instance find")
 	}
 	return lines
