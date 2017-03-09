@@ -11,18 +11,18 @@ type S3Bucket struct {
 }
 
 // Handle : ...
-func (n *S3Bucket) Handle(subject string, components []interface{}, lines []Message) []Message {
+func (n *S3Bucket) Handle(subject string, component interface{}, lines []Message) []Message {
 	parts := strings.Split(subject, ".")
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 	case "s3.create":
-		lines = n.getSingleDetail(components, "S3 bucket created")
+		lines = n.getSingleDetail(component, "S3 bucket created")
 	case "s3.update":
-		lines = n.getSingleDetail(components, "S3 bucket updated")
+		lines = n.getSingleDetail(component, "S3 bucket updated")
 	case "s3.delete":
-		lines = n.getSingleDetail(components, "S3 bucket deleted")
+		lines = n.getSingleDetail(component, "S3 bucket deleted")
 	case "s3.find":
-		lines = n.getSingleDetail(components, "S3 bucket imported")
+		lines = n.getSingleDetail(component, "S3 bucket imported")
 	}
 	return lines
 }

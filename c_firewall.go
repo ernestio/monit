@@ -11,18 +11,18 @@ type Firewall struct {
 }
 
 // Handle : ...
-func (n *Firewall) Handle(subject string, components []interface{}, lines []Message) []Message {
+func (n *Firewall) Handle(subject string, component interface{}, lines []Message) []Message {
 	parts := strings.Split(subject, ".")
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 	case "firewall.create":
-		lines = n.getSingleDetail(components, "Firewall created")
+		lines = n.getSingleDetail(component, "Firewall created")
 	case "firewall.update":
-		lines = n.getSingleDetail(components, "Firewall updated")
+		lines = n.getSingleDetail(component, "Firewall updated")
 	case "firewall.delete":
-		lines = n.getSingleDetail(components, "Firewall deleted")
+		lines = n.getSingleDetail(component, "Firewall deleted")
 	case "firewall.find":
-		lines = n.getSingleDetail(components, "Firewall found")
+		lines = n.getSingleDetail(component, "Firewall found")
 	}
 	return lines
 }

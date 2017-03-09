@@ -11,16 +11,16 @@ type Network struct {
 }
 
 // Handle : ...
-func (n *Network) Handle(subject string, components []interface{}, lines []Message) []Message {
+func (n *Network) Handle(subject string, component interface{}, lines []Message) []Message {
 	parts := strings.Split(subject, ".")
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 	case "network.create":
-		lines = n.getSingleDetail(components, "Network created")
+		lines = n.getSingleDetail(component, "Network created")
 	case "network.delete":
-		lines = n.getSingleDetail(components, "Network deleted")
+		lines = n.getSingleDetail(component, "Network deleted")
 	case "network.find":
-		lines = n.getSingleDetail(components, "Network found")
+		lines = n.getSingleDetail(component, "Network found")
 	}
 	return lines
 }

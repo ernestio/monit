@@ -11,18 +11,18 @@ type Nat struct {
 }
 
 // Handle : ...
-func (n *Nat) Handle(subject string, components []interface{}, lines []Message) []Message {
+func (n *Nat) Handle(subject string, component interface{}, lines []Message) []Message {
 	parts := strings.Split(subject, ".")
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 	case "nat.create":
-		lines = n.getSingleDetail(components, "Nat created")
+		lines = n.getSingleDetail(component, "Nat created")
 	case "nat.update":
-		lines = n.getSingleDetail(components, "Nat updated")
+		lines = n.getSingleDetail(component, "Nat updated")
 	case "nat.delete":
-		lines = n.getSingleDetail(components, "Nat deleted")
+		lines = n.getSingleDetail(component, "Nat deleted")
 	case "nat.find":
-		lines = n.getSingleDetail(components, "Nat created")
+		lines = n.getSingleDetail(component, "Nat created")
 	}
 	return lines
 }

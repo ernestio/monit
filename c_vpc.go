@@ -11,18 +11,18 @@ type Vpc struct {
 }
 
 // Handle : ...
-func (n *Vpc) Handle(subject string, components []interface{}, lines []Message) []Message {
+func (n *Vpc) Handle(subject string, component interface{}, lines []Message) []Message {
 	parts := strings.Split(subject, ".")
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 	case "vpc.create":
-		lines = n.getSingleDetail(components, "VPC created")
+		lines = n.getSingleDetail(component, "VPC created")
 	case "vpc.update":
-		lines = n.getSingleDetail(components, "VPC udpated")
+		lines = n.getSingleDetail(component, "VPC udpated")
 	case "vpc.delete":
-		lines = n.getSingleDetail(components, "VPC deleted")
+		lines = n.getSingleDetail(component, "VPC deleted")
 	case "vpc.find":
-		lines = n.getSingleDetail(components, "VPC Found")
+		lines = n.getSingleDetail(component, "VPC Found")
 	}
 	return lines
 }

@@ -11,12 +11,12 @@ type Bootstrap struct {
 }
 
 // Handle : ..
-func (n *Bootstrap) Handle(subject string, components []interface{}, lines []Message) []Message {
+func (n *Bootstrap) Handle(subject string, component interface{}, lines []Message) []Message {
 	parts := strings.Split(subject, ".")
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 	case "bootstrap.create":
-		lines = n.getSingleDetail(components, "Bootstrap ran")
+		lines = n.getSingleDetail(component, "Bootstrap ran")
 	}
 
 	return lines

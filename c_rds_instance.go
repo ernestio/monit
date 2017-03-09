@@ -11,18 +11,18 @@ type RDSInstance struct {
 }
 
 // Handle : ...
-func (n *RDSInstance) Handle(subject string, components []interface{}, lines []Message) []Message {
+func (n *RDSInstance) Handle(subject string, component interface{}, lines []Message) []Message {
 	parts := strings.Split(subject, ".")
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 	case "rds_instance.create":
-		lines = n.getSingleDetail(components, "RDS instance created")
+		lines = n.getSingleDetail(component, "RDS instance created")
 	case "rds_instance.udpate":
-		lines = n.getSingleDetail(components, "RDS instance updated")
+		lines = n.getSingleDetail(component, "RDS instance updated")
 	case "rds_instance.delete":
-		lines = n.getSingleDetail(components, "RDS instance deleted")
+		lines = n.getSingleDetail(component, "RDS instance deleted")
 	case "rds_instance.find":
-		lines = n.getSingleDetail(components, "RDS instance found")
+		lines = n.getSingleDetail(component, "RDS instance found")
 	}
 	return lines
 }

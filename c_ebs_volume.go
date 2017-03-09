@@ -11,16 +11,16 @@ type EBSVolume struct {
 }
 
 // Handle : ...
-func (n *EBSVolume) Handle(subject string, components []interface{}, lines []Message) []Message {
+func (n *EBSVolume) Handle(subject string, component interface{}, lines []Message) []Message {
 	parts := strings.Split(subject, ".")
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 	case "ebs_volume.create":
-		lines = n.getSingleDetail(components, "Created EBS volume ")
+		lines = n.getSingleDetail(component, "Created EBS volume ")
 	case "ebs_volume.delete":
-		lines = n.getSingleDetail(components, "Deleted EBS volume ")
+		lines = n.getSingleDetail(component, "Deleted EBS volume ")
 	case "ebs_volume.find":
-		lines = n.getSingleDetail(components, "Found EBS volume ")
+		lines = n.getSingleDetail(component, "Found EBS volume ")
 	}
 	return lines
 }

@@ -11,18 +11,18 @@ type Instance struct {
 }
 
 // Handle : ...
-func (n *Instance) Handle(subject string, components []interface{}, lines []Message) []Message {
+func (n *Instance) Handle(subject string, component interface{}, lines []Message) []Message {
 	parts := strings.Split(subject, ".")
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 	case "instance.create":
-		lines = n.getSingleDetail(components, "Instance created")
+		lines = n.getSingleDetail(component, "Instance created")
 	case "instance.update":
-		lines = n.getSingleDetail(components, "Instance udpated")
+		lines = n.getSingleDetail(component, "Instance udpated")
 	case "instance.delete":
-		lines = n.getSingleDetail(components, "Instance delete")
+		lines = n.getSingleDetail(component, "Instance delete")
 	case "instance.find":
-		lines = n.getSingleDetail(components, "Instance find")
+		lines = n.getSingleDetail(component, "Instance find")
 	}
 	return lines
 }

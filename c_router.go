@@ -11,15 +11,15 @@ type Router struct {
 }
 
 // Handle : ...
-func (n *Router) Handle(subject string, components []interface{}, lines []Message) []Message {
+func (n *Router) Handle(subject string, component interface{}, lines []Message) []Message {
 	parts := strings.Split(subject, ".")
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 
 	case "router.create":
-		lines = n.getSingleDetail(components, "Created router")
+		lines = n.getSingleDetail(component, "Created router")
 	case "router.delete":
-		lines = n.getSingleDetail(components, "Deleted router")
+		lines = n.getSingleDetail(component, "Deleted router")
 	}
 	return lines
 }

@@ -11,18 +11,18 @@ type ELB struct {
 }
 
 // Handle : ...
-func (n *ELB) Handle(subject string, components []interface{}, lines []Message) []Message {
+func (n *ELB) Handle(subject string, component interface{}, lines []Message) []Message {
 	parts := strings.Split(subject, ".")
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 	case "elb.create":
-		lines = n.getSingleDetail(components, "Created ELB")
+		lines = n.getSingleDetail(component, "Created ELB")
 	case "elb.update":
-		lines = n.getSingleDetail(components, "Updated ELB")
+		lines = n.getSingleDetail(component, "Updated ELB")
 	case "elb.delete":
-		lines = n.getSingleDetail(components, "Deleted ELB")
+		lines = n.getSingleDetail(component, "Deleted ELB")
 	case "elb.find":
-		lines = n.getSingleDetail(components, "Found ELB")
+		lines = n.getSingleDetail(component, "Found ELB")
 
 	}
 	return lines

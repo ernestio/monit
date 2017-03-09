@@ -11,18 +11,18 @@ type RDSCluster struct {
 }
 
 // Handle : ...
-func (n *RDSCluster) Handle(subject string, components []interface{}, lines []Message) []Message {
+func (n *RDSCluster) Handle(subject string, component interface{}, lines []Message) []Message {
 	parts := strings.Split(subject, ".")
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 	case "rds_cluster.create":
-		lines = n.getSingleDetail(components, "RDS cluster created")
+		lines = n.getSingleDetail(component, "RDS cluster created")
 	case "rds_cluster.update":
-		lines = n.getSingleDetail(components, "RDS cluster updated")
+		lines = n.getSingleDetail(component, "RDS cluster updated")
 	case "rds_cluster.delete":
-		lines = n.getSingleDetail(components, "RDS cluster deleted")
+		lines = n.getSingleDetail(component, "RDS cluster deleted")
 	case "rds_cluster.find":
-		lines = n.getSingleDetail(components, "RDS cluster found")
+		lines = n.getSingleDetail(component, "RDS cluster found")
 	}
 	return lines
 }
