@@ -81,12 +81,12 @@ func main() {
 		return
 	}
 
-	_, err = n.Subscribe("*.*", genericHandler)
+	_, err = n.Subscribe("*.*.*", genericHandler)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	_, err = n.Subscribe("*.*.*", genericHandler)
+	_, err = n.Subscribe("*.*.*.*", genericHandler)
 	if err != nil {
 		log.Println(err)
 		return

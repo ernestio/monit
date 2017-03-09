@@ -33,43 +33,43 @@ func genericHandler(msg *nats.Msg) {
 	component := parts[0]
 
 	switch component {
-	case "ebs_volumes":
+	case "ebs_volumes", "ebs_volume":
 		var n EBSVolume
 		msgLines = n.Handle(msg.Subject, input.Components, msgLines)
-	case "instances":
+	case "instances", "instance":
 		var n Instance
 		msgLines = n.Handle(msg.Subject, input.Components, msgLines)
-	case "networks":
+	case "networks", "network":
 		var n Network
 		msgLines = n.Handle(msg.Subject, input.Components, msgLines)
-	case "firewalls":
+	case "firewalls", "firewall":
 		var n Firewall
 		msgLines = n.Handle(msg.Subject, input.Components, msgLines)
-	case "nats":
+	case "nats", "nat":
 		var n Nat
 		msgLines = n.Handle(msg.Subject, input.Components, msgLines)
-	case "routers":
+	case "routers", "router":
 		var n Router
 		msgLines = n.Handle(msg.Subject, input.Components, msgLines)
-	case "vpcs":
+	case "vpcs", "vpc":
 		var n Vpc
 		msgLines = n.Handle(msg.Subject, input.Components, msgLines)
-	case "executions":
+	case "executions", "execution":
 		var n Execution
 		msgLines = n.Handle(msg.Subject, input.Components, msgLines)
-	case "bootstraps":
+	case "bootstraps", "bootstrap":
 		var n Bootstrap
 		msgLines = n.Handle(msg.Subject, input.Components, msgLines)
-	case "elbs":
+	case "elbs", "elb":
 		var n ELB
 		msgLines = n.Handle(msg.Subject, input.Components, msgLines)
-	case "s3s":
+	case "s3s", "s3":
 		var n S3Bucket
 		msgLines = n.Handle(msg.Subject, input.Components, msgLines)
-	case "rds_clusters":
+	case "rds_clusters", "rds_cluster":
 		var n RDSCluster
 		msgLines = n.Handle(msg.Subject, input.Components, msgLines)
-	case "rds_instances":
+	case "rds_instances", "rds_instance":
 		var n RDSInstance
 		msgLines = n.Handle(msg.Subject, input.Components, msgLines)
 	default:
