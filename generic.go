@@ -12,9 +12,9 @@ import (
 	"github.com/nats-io/nats"
 )
 
-type genericMessage map[string]interface{}
+type component map[string]interface{}
 
-func (m *genericMessage) getServiceID() string {
+func (m *component) getServiceID() string {
 	id, ok := (*m)["service"].(string)
 	if ok {
 		return id
@@ -22,16 +22,16 @@ func (m *genericMessage) getServiceID() string {
 	return ""
 }
 
-func (m *genericMessage) getServicePart() string {
+func (m *component) getServicePart() string {
 	pieces := strings.Split(m.getServiceID(), "-")
 	return pieces[len(pieces)-1]
 }
 
 func genericHandler(msg *nats.Msg) {
 	var msgLines []Message
-	var input genericMessage
+	var c component
 
-	if err := json.Unmarshal(msg.Data, &input); err != nil {
+	if err := json.Unmarshal(msg.Data, &c); err != nil {
 		return
 	}
 
@@ -41,48 +41,42 @@ func genericHandler(msg *nats.Msg) {
 	switch component {
 	case "ebs_volumes", "ebs_volume":
 		var nt EBSVolume
-		msgLines = nt.Handle(msg.Subject, input, msgLines)
+		msgLines = nt.Handle(msg.Subject, c, msgLines)
 	case "instances", "instance":
 		var nt Instance
-		msgLines = nt.Handle(msg.Subject, input, msgLines)
+		msgLines = nt.Handle(msg.Subject, c, msgLines)
 	case "networks", "network":
 		var nt Network
-		msgLines = nt.Handle(msg.Subject, input, msgLines)
+		msgLines = nt.Handle(msg.Subject, c, msgLines)
 	case "firewalls", "firewall":
 		var nt Firewall
-		msgLines = nt.Handle(msg.Subject, input, msgLines)
+		msgLines = nt.Handle(msg.Subject, c, msgLines)
 	case "nats", "nat":
 		var nt Nat
-		msgLines = nt.Handle(msg.Subject, input, msgLines)
+		msgLines = nt.Handle(msg.Subject, c, msgLines)
 	case "routers", "router":
 		var nt Router
-		msgLines = nt.Handle(msg.Subject, input, msgLines)
+		msgLines = nt.Handle(msg.Subject, c, msgLines)
 	case "vpcs", "vpc":
 		var nt Vpc
-		msgLines = nt.Handle(msg.Subject, input, msgLines)
-	case "executions", "execution":
-		var nt Execution
-		msgLines = nt.Handle(msg.Subject, input, msgLines)
-	case "bootstraps", "bootstrap":
-		var nt Bootstrap
-		msgLines = nt.Handle(msg.Subject, input, msgLines)
+		msgLines = nt.Handle(msg.Subject, c, msgLines)
 	case "elbs", "elb":
 		var nt ELB
-		msgLines = nt.Handle(msg.Subject, input, msgLines)
+		msgLines = nt.Handle(msg.Subject, c, msgLines)
 	case "s3s", "s3":
 		var nt S3Bucket
-		msgLines = nt.Handle(msg.Subject, input, msgLines)
+		msgLines = nt.Handle(msg.Subject, c, msgLines)
 	case "rds_clusters", "rds_cluster":
 		var nt RDSCluster
-		msgLines = nt.Handle(msg.Subject, input, msgLines)
+		msgLines = nt.Handle(msg.Subject, c, msgLines)
 	case "rds_instances", "rds_instance":
 		var nt RDSInstance
-		msgLines = nt.Handle(msg.Subject, input, msgLines)
+		msgLines = nt.Handle(msg.Subject, c, msgLines)
 	default:
 		log.Println("unsupported: " + msg.Subject)
 	}
 	for _, v := range msgLines {
-		publishMessage(input.getServicePart(), &v)
+		publishMessage(c.getServicePart(), &v)
 	}
 }
 

@@ -11,32 +11,31 @@ type Router struct {
 }
 
 // Handle : ...
-func (n *Router) Handle(subject string, component interface{}, lines []Message) []Message {
+func (n *Router) Handle(subject string, c component, lines []Message) []Message {
 	parts := strings.Split(subject, ".")
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 
 	case "router.create":
-		lines = n.getSingleDetail(component, "Created router")
+		lines = n.getSingleDetail(c, "Created router")
 	case "routers.delete":
-		lines = n.getSingleDetail(component, "Deleted router")
+		lines = n.getSingleDetail(c, "Deleted router")
 	}
 	return lines
 }
 
-func (n *Router) getSingleDetail(v interface{}, prefix string) (lines []Message) {
-	r := v.(map[string]interface{})
-	name, _ := r["name"].(string)
+func (n *Router) getSingleDetail(c component, prefix string) (lines []Message) {
+	name, _ := c["name"].(string)
 	if prefix != "" {
 		name = prefix + " " + name
 	}
-	status, _ := r["status"].(string)
-	ip, _ := r["ip"].(string)
+	status, _ := c["status"].(string)
+	ip, _ := c["ip"].(string)
 	lines = append(lines, Message{Body: " - " + name, Level: ""})
 	lines = append(lines, Message{Body: "   IP        : " + ip, Level: ""})
 	lines = append(lines, Message{Body: "   Status    : " + status, Level: ""})
 	if status == "errored" {
-		err, _ := r["error"].(string)
+		err, _ := c["error"].(string)
 		lines = append(lines, Message{Body: "   Error     : " + err, Level: "ERROR"})
 	}
 

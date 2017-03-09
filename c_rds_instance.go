@@ -11,38 +11,37 @@ type RDSInstance struct {
 }
 
 // Handle : ...
-func (n *RDSInstance) Handle(subject string, component interface{}, lines []Message) []Message {
+func (n *RDSInstance) Handle(subject string, c component, lines []Message) []Message {
 	parts := strings.Split(subject, ".")
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 	case "rds_instance.create":
-		lines = n.getSingleDetail(component, "RDS instance created")
+		lines = n.getSingleDetail(c, "RDS instance created")
 	case "rds_instance.udpate":
-		lines = n.getSingleDetail(component, "RDS instance updated")
+		lines = n.getSingleDetail(c, "RDS instance updated")
 	case "rds_instance.delete":
-		lines = n.getSingleDetail(component, "RDS instance deleted")
+		lines = n.getSingleDetail(c, "RDS instance deleted")
 	case "rds_instances.find":
-		lines = n.getSingleDetail(component, "RDS instance found")
+		lines = n.getSingleDetail(c, "RDS instance found")
 	}
 	return lines
 }
 
-func (n *RDSInstance) getSingleDetail(v interface{}, prefix string) (lines []Message) {
-	r := v.(map[string]interface{})
-	name, _ := r["name"].(string)
+func (n *RDSInstance) getSingleDetail(c component, prefix string) (lines []Message) {
+	name, _ := c["name"].(string)
 	if prefix != "" {
 		name = prefix + " " + name
 	}
-	engine, _ := r["engine"].(string)
-	cluster, _ := r["cluster"].(string)
-	endpoint, _ := r["endpoint"].(string)
-	status, _ := r["status"].(string)
+	engine, _ := c["engine"].(string)
+	cluster, _ := c["cluster"].(string)
+	endpoint, _ := c["endpoint"].(string)
+	status, _ := c["status"].(string)
 	lines = append(lines, Message{Body: " - " + name, Level: ""})
 	lines = append(lines, Message{Body: "   Engine    : " + engine, Level: ""})
 	lines = append(lines, Message{Body: "   Cluster   : " + cluster, Level: ""})
 	lines = append(lines, Message{Body: "   Endpoint  : " + endpoint, Level: ""})
 	if status == "errored" {
-		err, _ := r["error"].(string)
+		err, _ := c["error"].(string)
 		lines = append(lines, Message{Body: "   Error     : " + err, Level: "ERROR"})
 	}
 

@@ -11,37 +11,36 @@ type Network struct {
 }
 
 // Handle : ...
-func (n *Network) Handle(subject string, component interface{}, lines []Message) []Message {
+func (n *Network) Handle(subject string, c component, lines []Message) []Message {
 	parts := strings.Split(subject, ".")
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 	case "network.create":
-		lines = n.getSingleDetail(component, "Network created")
+		lines = n.getSingleDetail(c, "Network created")
 	case "network.delete":
-		lines = n.getSingleDetail(component, "Network deleted")
+		lines = n.getSingleDetail(c, "Network deleted")
 	case "networks.find":
-		lines = n.getSingleDetail(component, "Network found")
+		lines = n.getSingleDetail(c, "Network found")
 	}
 	return lines
 }
 
-func (n *Network) getSingleDetail(v interface{}, prefix string) (lines []Message) {
-	r := v.(map[string]interface{})
-	ip, _ := r["range"].(string)
-	name, _ := r["name"].(string)
+func (n *Network) getSingleDetail(c component, prefix string) (lines []Message) {
+	ip, _ := c["range"].(string)
+	name, _ := c["name"].(string)
 	if prefix != "" {
 		name = prefix + " " + name
 	}
-	status, _ := r["status"].(string)
+	status, _ := c["status"].(string)
 	lines = append(lines, Message{Body: " - " + name, Level: ""})
 	lines = append(lines, Message{Body: "   IP     : " + ip, Level: ""})
-	id, _ := r["network_aws_id"].(string)
+	id, _ := c["network_aws_id"].(string)
 	if id != "" {
 		lines = append(lines, Message{Body: "   AWS ID : " + id, Level: ""})
 	}
 	lines = append(lines, Message{Body: "   Status : " + status, Level: ""})
 	if status == "errored" {
-		err, _ := r["error"].(string)
+		err, _ := c["error"].(string)
 		lines = append(lines, Message{Body: "   Error     : " + err, Level: "ERROR"})
 	}
 	return lines
