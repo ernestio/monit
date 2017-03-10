@@ -32,8 +32,8 @@ func (n *Vpc) getSingleDetail(c component, prefix string) (lines []Message) {
 	if prefix != "" {
 		id = prefix + " " + id
 	}
-	subnet, _ := c["vpc_subnet"].(string)
-	status, _ := c["status"].(string)
+	subnet, _ := c["subnet"].(string)
+	status, _ := c["_state"].(string)
 	lines = append(lines, Message{Body: " - " + id, Level: ""})
 	lines = append(lines, Message{Body: "   Subnet    : " + subnet, Level: ""})
 	lines = append(lines, Message{Body: "   Status    : " + status, Level: ""})

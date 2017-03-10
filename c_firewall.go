@@ -32,7 +32,7 @@ func (n *Firewall) getSingleDetail(c component, prefix string) (lines []Message)
 	if prefix != "" {
 		name = prefix + " " + name
 	}
-	status, _ := c["status"].(string)
+	status, _ := c["_state"].(string)
 	lines = append(lines, Message{Body: " - " + name, Level: ""})
 	lines = append(lines, Message{Body: "   Status    : " + status, Level: ""})
 	if status == "errored" {

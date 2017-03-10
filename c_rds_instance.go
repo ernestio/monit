@@ -35,7 +35,7 @@ func (n *RDSInstance) getSingleDetail(c component, prefix string) (lines []Messa
 	engine, _ := c["engine"].(string)
 	cluster, _ := c["cluster"].(string)
 	endpoint, _ := c["endpoint"].(string)
-	status, _ := c["status"].(string)
+	status, _ := c["_state"].(string)
 	lines = append(lines, Message{Body: " - " + name, Level: ""})
 	lines = append(lines, Message{Body: "   Engine    : " + engine, Level: ""})
 	lines = append(lines, Message{Body: "   Cluster   : " + cluster, Level: ""})

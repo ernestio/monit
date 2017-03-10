@@ -31,7 +31,7 @@ func (n *Network) getSingleDetail(c component, prefix string) (lines []Message) 
 	if prefix != "" {
 		name = prefix + " " + name
 	}
-	status, _ := c["status"].(string)
+	status, _ := c["_state"].(string)
 	lines = append(lines, Message{Body: " - " + name, Level: ""})
 	lines = append(lines, Message{Body: "   IP     : " + ip, Level: ""})
 	id, _ := c["network_aws_id"].(string)

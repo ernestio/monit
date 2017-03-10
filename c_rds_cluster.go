@@ -34,7 +34,7 @@ func (n *RDSCluster) getSingleDetail(c component, prefix string) (lines []Messag
 	}
 	engine, _ := c["engine"].(string)
 	endpoint, _ := c["endpoint"].(string)
-	status, _ := c["status"].(string)
+	status, _ := c["_state"].(string)
 	lines = append(lines, Message{Body: " - " + name, Level: ""})
 	lines = append(lines, Message{Body: "   Engine    : " + engine, Level: ""})
 	lines = append(lines, Message{Body: "   Endpoint  : " + endpoint, Level: ""})

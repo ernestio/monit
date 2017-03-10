@@ -29,7 +29,7 @@ func (n *Router) getSingleDetail(c component, prefix string) (lines []Message) {
 	if prefix != "" {
 		name = prefix + " " + name
 	}
-	status, _ := c["status"].(string)
+	status, _ := c["_state"].(string)
 	ip, _ := c["ip"].(string)
 	lines = append(lines, Message{Body: " - " + name, Level: ""})
 	lines = append(lines, Message{Body: "   IP        : " + ip, Level: ""})

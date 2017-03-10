@@ -30,7 +30,7 @@ func (n *EBSVolume) getSingleDetail(c component, prefix string) (lines []Message
 	if prefix != "" {
 		name = prefix + " " + name
 	}
-	status, _ := c["status"].(string)
+	status, _ := c["_state"].(string)
 	lines = append(lines, Message{Body: " - " + name, Level: ""})
 	id, _ := c["volume_aws_id"].(string)
 	if id != "" {
