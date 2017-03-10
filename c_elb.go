@@ -11,41 +11,40 @@ type ELB struct {
 }
 
 // Handle : ...
-func (n *ELB) Handle(subject string, components []interface{}, lines []Message) []Message {
+func (n *ELB) Handle(subject string, c component, lines []Message) []Message {
 	parts := strings.Split(subject, ".")
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 	case "elb.create":
-		lines = n.getSingleDetail(components, "Created ELB")
+		lines = n.getSingleDetail(c, "Created ELB")
 	case "elb.update":
-		lines = n.getSingleDetail(components, "Updated ELB")
+		lines = n.getSingleDetail(c, "Updated ELB")
 	case "elb.delete":
-		lines = n.getSingleDetail(components, "Deleted ELB")
-	case "elb.find":
-		lines = n.getSingleDetail(components, "Found ELB")
+		lines = n.getSingleDetail(c, "Deleted ELB")
+	case "elbs.find":
+		lines = n.getSingleDetail(c, "Found ELB")
 
 	}
 	return lines
 }
 
-func (n *ELB) getSingleDetail(v interface{}, prefix string) (lines []Message) {
-	r := v.(map[string]interface{})
-	name, _ := r["name"].(string)
+func (n *ELB) getSingleDetail(c component, prefix string) (lines []Message) {
+	name, _ := c["name"].(string)
 	if prefix != "" {
 		name = prefix + " " + name
 	}
-	status, _ := r["status"].(string)
+	status, _ := c["_state"].(string)
 	lines = append(lines, Message{Body: " - " + name, Level: ""})
 	lines = append(lines, Message{Body: "   Status    : " + status, Level: ""})
-	if r["dns_name"] != nil {
-		dnsName, _ := r["dns_name"].(string)
+	if c["dns_name"] != nil {
+		dnsName, _ := c["dns_name"].(string)
 		if dnsName != "" {
 			lines = append(lines, Message{Body: "   DNS    : " + dnsName, Level: ""})
 		}
 	}
 	lines = append(lines)
 	if status == "errored" {
-		err, _ := r["error"].(string)
+		err, _ := c["error"].(string)
 		lines = append(lines, Message{Body: "   Error     : " + err, Level: "ERROR"})
 	}
 

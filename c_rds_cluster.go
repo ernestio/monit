@@ -11,36 +11,35 @@ type RDSCluster struct {
 }
 
 // Handle : ...
-func (n *RDSCluster) Handle(subject string, components []interface{}, lines []Message) []Message {
+func (n *RDSCluster) Handle(subject string, c component, lines []Message) []Message {
 	parts := strings.Split(subject, ".")
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 	case "rds_cluster.create":
-		lines = n.getSingleDetail(components, "RDS cluster created")
+		lines = n.getSingleDetail(c, "RDS cluster created")
 	case "rds_cluster.update":
-		lines = n.getSingleDetail(components, "RDS cluster updated")
+		lines = n.getSingleDetail(c, "RDS cluster updated")
 	case "rds_cluster.delete":
-		lines = n.getSingleDetail(components, "RDS cluster deleted")
-	case "rds_cluster.find":
-		lines = n.getSingleDetail(components, "RDS cluster found")
+		lines = n.getSingleDetail(c, "RDS cluster deleted")
+	case "rds_clusters.find":
+		lines = n.getSingleDetail(c, "RDS cluster found")
 	}
 	return lines
 }
 
-func (n *RDSCluster) getSingleDetail(v interface{}, prefix string) (lines []Message) {
-	r := v.(map[string]interface{})
-	name, _ := r["name"].(string)
+func (n *RDSCluster) getSingleDetail(c component, prefix string) (lines []Message) {
+	name, _ := c["name"].(string)
 	if prefix != "" {
 		name = prefix + " " + name
 	}
-	engine, _ := r["engine"].(string)
-	endpoint, _ := r["endpoint"].(string)
-	status, _ := r["status"].(string)
+	engine, _ := c["engine"].(string)
+	endpoint, _ := c["endpoint"].(string)
+	status, _ := c["_state"].(string)
 	lines = append(lines, Message{Body: " - " + name, Level: ""})
 	lines = append(lines, Message{Body: "   Engine    : " + engine, Level: ""})
 	lines = append(lines, Message{Body: "   Endpoint  : " + endpoint, Level: ""})
 	if status == "errored" {
-		err, _ := r["error"].(string)
+		err, _ := c["error"].(string)
 		lines = append(lines, Message{Body: "   Error     : " + err, Level: "ERROR"})
 	}
 	return lines

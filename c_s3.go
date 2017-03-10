@@ -11,38 +11,37 @@ type S3Bucket struct {
 }
 
 // Handle : ...
-func (n *S3Bucket) Handle(subject string, components []interface{}, lines []Message) []Message {
+func (n *S3Bucket) Handle(subject string, c component, lines []Message) []Message {
 	parts := strings.Split(subject, ".")
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 	case "s3.create":
-		lines = n.getSingleDetail(components, "S3 bucket created")
+		lines = n.getSingleDetail(c, "S3 bucket created")
 	case "s3.update":
-		lines = n.getSingleDetail(components, "S3 bucket updated")
+		lines = n.getSingleDetail(c, "S3 bucket updated")
 	case "s3.delete":
-		lines = n.getSingleDetail(components, "S3 bucket deleted")
-	case "s3.find":
-		lines = n.getSingleDetail(components, "S3 bucket imported")
+		lines = n.getSingleDetail(c, "S3 bucket deleted")
+	case "s3s.find":
+		lines = n.getSingleDetail(c, "S3 bucket imported")
 	}
 	return lines
 }
 
-func (n *S3Bucket) getSingleDetail(v interface{}, prefix string) (lines []Message) {
-	r := v.(map[string]interface{})
-	name, _ := r["name"].(string)
+func (n *S3Bucket) getSingleDetail(c component, prefix string) (lines []Message) {
+	name, _ := c["name"].(string)
 	if prefix != "" {
 		name = prefix + " " + name
 	}
-	acl, _ := r["acl"].(string)
+	acl, _ := c["acl"].(string)
 	if acl == "" {
 		acl = "by grantees"
 	}
-	status, _ := r["status"].(string)
+	status, _ := c["_state"].(string)
 	lines = append(lines, Message{Body: " - " + name, Level: ""})
 	lines = append(lines, Message{Body: "   ACL       : " + acl, Level: ""})
 	lines = append(lines, Message{Body: "   Status    : " + status, Level: ""})
 	if status == "errored" {
-		err, _ := r["error"].(string)
+		err, _ := c["error"].(string)
 		lines = append(lines, Message{Body: "   Error     : " + err, Level: "ERROR"})
 	}
 	return lines

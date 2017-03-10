@@ -29,11 +29,15 @@ type Notification struct {
 }
 
 func (n *Notification) getServiceID() string {
+	var pieces []string
+
 	if n.Service != "" {
-		pieces := strings.Split(n.Service, "-")
-		return pieces[len(pieces)-1]
+		pieces = strings.Split(n.Service, "-")
+	} else {
+		pieces = strings.Split(n.ID, "-")
 	}
-	return n.ID
+
+	return pieces[len(pieces)-1]
 }
 
 func processNotification(notification *Notification, msg *nats.Msg) error {
