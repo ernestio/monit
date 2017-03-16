@@ -36,13 +36,17 @@ func (n *RDSInstance) getSingleDetail(c component, prefix string) (lines []Messa
 	cluster, _ := c["cluster"].(string)
 	endpoint, _ := c["endpoint"].(string)
 	status, _ := c["_state"].(string)
-	lines = append(lines, Message{Body: " - " + name, Level: ""})
+	level := "INFO"
+	if status == "errored" {
+		level = "ERROR"
+	}
+	lines = append(lines, Message{Body: " " + name, Level: level})
 	lines = append(lines, Message{Body: "   Engine    : " + engine, Level: ""})
 	lines = append(lines, Message{Body: "   Cluster   : " + cluster, Level: ""})
 	lines = append(lines, Message{Body: "   Endpoint  : " + endpoint, Level: ""})
 	if status == "errored" {
 		err, _ := c["error"].(string)
-		lines = append(lines, Message{Body: "   Error     : " + err, Level: "ERROR"})
+		lines = append(lines, Message{Body: "   Error     : " + err, Level: ""})
 	}
 
 	return lines

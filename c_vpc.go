@@ -34,12 +34,16 @@ func (n *Vpc) getSingleDetail(c component, prefix string) (lines []Message) {
 	}
 	subnet, _ := c["subnet"].(string)
 	status, _ := c["_state"].(string)
-	lines = append(lines, Message{Body: " - " + id, Level: ""})
+	level := "INFO"
+	if status == "errored" {
+		level = "ERROR"
+	}
+	lines = append(lines, Message{Body: " " + id, Level: level})
 	lines = append(lines, Message{Body: "   Subnet    : " + subnet, Level: ""})
 	lines = append(lines, Message{Body: "   Status    : " + status, Level: ""})
 	if status == "errored" {
 		err, _ := c["error"].(string)
-		lines = append(lines, Message{Body: "   Error     : " + err, Level: "ERROR"})
+		lines = append(lines, Message{Body: "   Error     : " + err, Level: ""})
 	}
 	return lines
 }

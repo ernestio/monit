@@ -37,12 +37,16 @@ func (n *S3Bucket) getSingleDetail(c component, prefix string) (lines []Message)
 		acl = "by grantees"
 	}
 	status, _ := c["_state"].(string)
-	lines = append(lines, Message{Body: " - " + name, Level: ""})
+	level := "INFO"
+	if status == "errored" {
+		level = "ERROR"
+	}
+	lines = append(lines, Message{Body: " " + name, Level: level})
 	lines = append(lines, Message{Body: "   ACL       : " + acl, Level: ""})
 	lines = append(lines, Message{Body: "   Status    : " + status, Level: ""})
 	if status == "errored" {
 		err, _ := c["error"].(string)
-		lines = append(lines, Message{Body: "   Error     : " + err, Level: "ERROR"})
+		lines = append(lines, Message{Body: "   Error     : " + err, Level: ""})
 	}
 	return lines
 }
