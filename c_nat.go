@@ -33,11 +33,15 @@ func (n *Nat) getSingleDetail(c component, prefix string) (lines []Message) {
 		name = prefix + " " + name
 	}
 	status, _ := c["_state"].(string)
-	lines = append(lines, Message{Body: " - " + name, Level: ""})
+	level := "INFO"
+	if status == "errored" {
+		level = "ERROR"
+	}
+	lines = append(lines, Message{Body: " " + name, Level: level})
 	lines = append(lines, Message{Body: "   Status    : " + status, Level: ""})
 	if status == "errored" {
 		err, _ := c["error"].(string)
-		lines = append(lines, Message{Body: "   Error     : " + err, Level: "ERROR"})
+		lines = append(lines, Message{Body: "   Error     : " + err, Level: ""})
 	}
 	return lines
 }

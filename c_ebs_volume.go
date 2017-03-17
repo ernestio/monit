@@ -31,7 +31,11 @@ func (n *EBSVolume) getSingleDetail(c component, prefix string) (lines []Message
 		name = prefix + " " + name
 	}
 	status, _ := c["_state"].(string)
-	lines = append(lines, Message{Body: " - " + name, Level: ""})
+	level := "INFO"
+	if status == "errored" {
+		level = "ERROR"
+	}
+	lines = append(lines, Message{Body: " " + name, Level: level})
 	id, _ := c["volume_aws_id"].(string)
 	if id != "" {
 		lines = append(lines, Message{Body: "   AWS ID : " + id, Level: ""})
@@ -39,7 +43,7 @@ func (n *EBSVolume) getSingleDetail(c component, prefix string) (lines []Message
 	lines = append(lines, Message{Body: "   Status : " + status, Level: ""})
 	if status == "errored" {
 		err, _ := c["error"].(string)
-		lines = append(lines, Message{Body: "   Error     : " + err, Level: "ERROR"})
+		lines = append(lines, Message{Body: "   Error     : " + err, Level: ""})
 	}
 	return lines
 }
