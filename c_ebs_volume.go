@@ -35,6 +35,9 @@ func (n *EBSVolume) getSingleDetail(c component, prefix string) (lines []Message
 	if status == "errored" {
 		level = "ERROR"
 	}
+	if status != "errored" && status != "completed" {
+		return lines
+	}
 	lines = append(lines, Message{Body: " " + name, Level: level})
 	id, _ := c["volume_aws_id"].(string)
 	if id != "" {

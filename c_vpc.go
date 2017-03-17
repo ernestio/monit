@@ -38,6 +38,9 @@ func (n *Vpc) getSingleDetail(c component, prefix string) (lines []Message) {
 	if status == "errored" {
 		level = "ERROR"
 	}
+	if status != "errored" && status != "completed" {
+		return lines
+	}
 	lines = append(lines, Message{Body: " " + id, Level: level})
 	lines = append(lines, Message{Body: "   Subnet    : " + subnet, Level: ""})
 	lines = append(lines, Message{Body: "   Status    : " + status, Level: ""})

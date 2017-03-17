@@ -39,6 +39,9 @@ func (n *RDSCluster) getSingleDetail(c component, prefix string) (lines []Messag
 	if status == "errored" {
 		level = "ERROR"
 	}
+	if status != "errored" && status != "completed" {
+		return lines
+	}
 	lines = append(lines, Message{Body: " " + name, Level: level})
 	lines = append(lines, Message{Body: "   Engine    : " + engine, Level: ""})
 	lines = append(lines, Message{Body: "   Endpoint  : " + endpoint, Level: ""})
