@@ -38,6 +38,9 @@ func (n *Instance) getSingleDetail(c component, prefix string) (lines []Message)
 	if status == "errored" {
 		level = "ERROR"
 	}
+	if status != "errored" && status != "completed" {
+		return lines
+	}
 	lines = append(lines, Message{Body: " " + name, Level: level})
 	lines = append(lines, Message{Body: "   IP        : " + ip, Level: ""})
 	publicIP, _ := c["public_ip"].(string)

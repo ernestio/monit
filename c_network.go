@@ -36,6 +36,9 @@ func (n *Network) getSingleDetail(c component, prefix string) (lines []Message) 
 	if status == "errored" {
 		level = "ERROR"
 	}
+	if status != "errored" && status != "completed" {
+		return lines
+	}
 	lines = append(lines, Message{Body: " " + name, Level: level})
 	lines = append(lines, Message{Body: "   IP     : " + ip, Level: ""})
 	id, _ := c["network_aws_id"].(string)
