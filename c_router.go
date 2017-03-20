@@ -16,10 +16,8 @@ func (n *Router) Handle(subject string, c component, lines []Message) []Message 
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 
-	case "router.create":
-		lines = n.getSingleDetail(c, "Created router")
-	case "routers.delete":
-		lines = n.getSingleDetail(c, "Deleted router")
+	case "router.create", "router.update":
+		lines = n.getSingleDetail(c, "Configured router")
 	}
 	return lines
 }
@@ -37,9 +35,7 @@ func (n *Router) getSingleDetail(c component, prefix string) (lines []Message) {
 	if status != "errored" && status != "completed" {
 		return lines
 	}
-	ip, _ := c["ip"].(string)
 	lines = append(lines, Message{Body: " " + name, Level: level})
-	lines = append(lines, Message{Body: "   IP        : " + ip, Level: ""})
 	lines = append(lines, Message{Body: "   Status    : " + status, Level: ""})
 	if status == "errored" {
 		err, _ := c["error"].(string)
