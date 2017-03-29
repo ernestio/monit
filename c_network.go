@@ -16,11 +16,13 @@ func (n *Network) Handle(subject string, c component, lines []Message) []Message
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 	case "network.create":
-		lines = n.getSingleDetail(c, "Network created")
+		lines = n.getSingleDetail(c, "Created Network")
 	case "network.delete":
-		lines = n.getSingleDetail(c, "Network deleted")
+		lines = n.getSingleDetail(c, "Deleted Network")
 	case "networks.find":
-		lines = n.getSingleDetail(c, "Network found")
+		for _, cx := range c.getFoundComponents() {
+			lines = append(lines, n.getSingleDetail(cx, "Found Network")...)
+		}
 	}
 	return lines
 }
@@ -36,16 +38,18 @@ func (n *Network) getSingleDetail(c component, prefix string) (lines []Message) 
 	if status == "errored" {
 		level = "ERROR"
 	}
-	if status != "errored" && status != "completed" {
+	if status != "errored" && status != "completed" && status != "" {
 		return lines
 	}
 	lines = append(lines, Message{Body: " " + name, Level: level})
-	lines = append(lines, Message{Body: "   IP     : " + ip, Level: ""})
+	lines = append(lines, Message{Body: "   Subnet : " + ip, Level: ""})
 	id, _ := c["network_aws_id"].(string)
 	if id != "" {
 		lines = append(lines, Message{Body: "   AWS ID : " + id, Level: ""})
 	}
-	lines = append(lines, Message{Body: "   Status : " + status, Level: ""})
+	if status != "" {
+		lines = append(lines, Message{Body: "   Status : " + status, Level: ""})
+	}
 	if status == "errored" {
 		err, _ := c["error"].(string)
 		lines = append(lines, Message{Body: "   Error     : " + err, Level: ""})

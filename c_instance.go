@@ -16,13 +16,15 @@ func (n *Instance) Handle(subject string, c component, lines []Message) []Messag
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 	case "instance.create":
-		lines = n.getSingleDetail(c, "Instance created")
+		lines = n.getSingleDetail(c, "Created Instance")
 	case "instance.update":
-		lines = n.getSingleDetail(c, "Instance udpated")
+		lines = n.getSingleDetail(c, "Updated Instance")
 	case "instance.delete":
-		lines = n.getSingleDetail(c, "Instance delete")
+		lines = n.getSingleDetail(c, "Deleted Instance")
 	case "instances.find":
-		lines = n.getSingleDetail(c, "Instance find")
+		for _, cx := range c.getFoundComponents() {
+			lines = append(lines, n.getSingleDetail(cx, "Found Instance")...)
+		}
 	}
 	return lines
 }
@@ -38,7 +40,7 @@ func (n *Instance) getSingleDetail(c component, prefix string) (lines []Message)
 	if status == "errored" {
 		level = "ERROR"
 	}
-	if status != "errored" && status != "completed" {
+	if status != "errored" && status != "completed" && status != "" {
 		return lines
 	}
 	lines = append(lines, Message{Body: " " + name, Level: level})
@@ -51,7 +53,9 @@ func (n *Instance) getSingleDetail(c component, prefix string) (lines []Message)
 	if id != "" {
 		lines = append(lines, Message{Body: "   AWS ID    : " + id, Level: ""})
 	}
-	lines = append(lines, Message{Body: "   Status    : " + status, Level: ""})
+	if status != "" {
+		lines = append(lines, Message{Body: "   Status    : " + status, Level: ""})
+	}
 	if status == "errored" {
 		err, _ := c["error"].(string)
 		lines = append(lines, Message{Body: "   Error     : " + err, Level: ""})

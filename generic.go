@@ -27,6 +27,19 @@ func (m *component) getServicePart() string {
 	return pieces[len(pieces)-1]
 }
 
+func (m *component) getFoundComponents() []component {
+	var c []component
+
+	components, ok := (*m)["components"].([]interface{})
+	if ok {
+		for _, x := range components {
+			c = append(c, x.(map[string]interface{}))
+		}
+	}
+
+	return c
+}
+
 func genericHandler(msg *nats.Msg) {
 	var msgLines []Message
 	var c component

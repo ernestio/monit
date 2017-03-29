@@ -16,13 +16,15 @@ func (n *RDSCluster) Handle(subject string, c component, lines []Message) []Mess
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 	case "rds_cluster.create":
-		lines = n.getSingleDetail(c, "RDS cluster created")
+		lines = n.getSingleDetail(c, "Created RDS Cluster")
 	case "rds_cluster.update":
-		lines = n.getSingleDetail(c, "RDS cluster updated")
+		lines = n.getSingleDetail(c, "Updated RDS Cluster")
 	case "rds_cluster.delete":
-		lines = n.getSingleDetail(c, "RDS cluster deleted")
+		lines = n.getSingleDetail(c, "Deleted RDS Cluster")
 	case "rds_clusters.find":
-		lines = n.getSingleDetail(c, "RDS cluster found")
+		for _, cx := range c.getFoundComponents() {
+			lines = append(lines, n.getSingleDetail(cx, "Found RDS Cluster")...)
+		}
 	}
 	return lines
 }
@@ -39,7 +41,7 @@ func (n *RDSCluster) getSingleDetail(c component, prefix string) (lines []Messag
 	if status == "errored" {
 		level = "ERROR"
 	}
-	if status != "errored" && status != "completed" {
+	if status != "errored" && status != "completed" && status != "" {
 		return lines
 	}
 	lines = append(lines, Message{Body: " " + name, Level: level})

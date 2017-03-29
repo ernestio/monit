@@ -16,13 +16,15 @@ func (n *RDSInstance) Handle(subject string, c component, lines []Message) []Mes
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 	case "rds_instance.create":
-		lines = n.getSingleDetail(c, "RDS instance created")
+		lines = n.getSingleDetail(c, "Created RDS Instance")
 	case "rds_instance.udpate":
-		lines = n.getSingleDetail(c, "RDS instance updated")
+		lines = n.getSingleDetail(c, "Updated RDS Instance")
 	case "rds_instance.delete":
-		lines = n.getSingleDetail(c, "RDS instance deleted")
+		lines = n.getSingleDetail(c, "Deleted RDS Instance")
 	case "rds_instances.find":
-		lines = n.getSingleDetail(c, "RDS instance found")
+		for _, cx := range c.getFoundComponents() {
+			lines = append(lines, n.getSingleDetail(cx, "Found RDS Instance")...)
+		}
 	}
 	return lines
 }
@@ -40,7 +42,7 @@ func (n *RDSInstance) getSingleDetail(c component, prefix string) (lines []Messa
 	if status == "errored" {
 		level = "ERROR"
 	}
-	if status != "errored" && status != "completed" {
+	if status != "errored" && status != "completed" && status != "" {
 		return lines
 	}
 	lines = append(lines, Message{Body: " " + name, Level: level})

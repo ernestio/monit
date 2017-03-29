@@ -16,13 +16,15 @@ func (n *Firewall) Handle(subject string, c component, lines []Message) []Messag
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 	case "firewall.create":
-		lines = n.getSingleDetail(c, "Firewall created")
+		lines = n.getSingleDetail(c, "Created Firewall")
 	case "firewall.update":
-		lines = n.getSingleDetail(c, "Firewall updated")
+		lines = n.getSingleDetail(c, "Updated Firewall")
 	case "firewall.delete":
-		lines = n.getSingleDetail(c, "Firewall deleted")
+		lines = n.getSingleDetail(c, "Deleted Firewall")
 	case "firewalls.find":
-		lines = n.getSingleDetail(c, "Firewall found")
+		for _, cx := range c.getFoundComponents() {
+			lines = append(lines, n.getSingleDetail(cx, "Found Firewall")...)
+		}
 	}
 	return lines
 }
@@ -37,11 +39,13 @@ func (n *Firewall) getSingleDetail(c component, prefix string) (lines []Message)
 	if status == "errored" {
 		level = "ERROR"
 	}
-	if status != "errored" && status != "completed" {
+	if status != "errored" && status != "completed" && status != "" {
 		return lines
 	}
 	lines = append(lines, Message{Body: " " + name, Level: level})
-	lines = append(lines, Message{Body: "   Status    : " + status, Level: ""})
+	if status != "" {
+		lines = append(lines, Message{Body: "   Status    : " + status, Level: ""})
+	}
 	if status == "errored" {
 		err, _ := c["error"].(string)
 		lines = append(lines, Message{Body: "   Error     : " + err, Level: ""})

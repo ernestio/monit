@@ -22,8 +22,9 @@ func (n *ELB) Handle(subject string, c component, lines []Message) []Message {
 	case "elb.delete":
 		lines = n.getSingleDetail(c, "Deleted ELB")
 	case "elbs.find":
-		lines = n.getSingleDetail(c, "Found ELB")
-
+		for _, cx := range c.getFoundComponents() {
+			lines = append(lines, n.getSingleDetail(cx, "Found ELB")...)
+		}
 	}
 	return lines
 }
@@ -38,11 +39,13 @@ func (n *ELB) getSingleDetail(c component, prefix string) (lines []Message) {
 	if status == "errored" {
 		level = "ERROR"
 	}
-	if status != "errored" && status != "completed" {
+	if status != "errored" && status != "completed" && status != "" {
 		return lines
 	}
 	lines = append(lines, Message{Body: " " + name, Level: level})
-	lines = append(lines, Message{Body: "   Status    : " + status, Level: ""})
+	if status != "" {
+		lines = append(lines, Message{Body: "   Status    : " + status, Level: ""})
+	}
 	if c["dns_name"] != nil {
 		dnsName, _ := c["dns_name"].(string)
 		if dnsName != "" {
