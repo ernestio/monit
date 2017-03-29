@@ -23,7 +23,7 @@ func (n *RDSInstance) Handle(subject string, c component, lines []Message) []Mes
 		lines = n.getSingleDetail(c, "Deleted RDS Instance")
 	case "rds_instances.find":
 		for _, cx := range c.getFoundComponents() {
-			lines = append(lines, n.getSingleDetail(cx, "Found RDS Instances")...)
+			lines = append(lines, n.getSingleDetail(cx, "Found RDS Instance")...)
 		}
 	}
 	return lines
@@ -42,7 +42,7 @@ func (n *RDSInstance) getSingleDetail(c component, prefix string) (lines []Messa
 	if status == "errored" {
 		level = "ERROR"
 	}
-	if status != "errored" && status != "completed" {
+	if status != "errored" && status != "completed" && status != "" {
 		return lines
 	}
 	lines = append(lines, Message{Body: " " + name, Level: level})

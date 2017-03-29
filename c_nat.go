@@ -23,7 +23,7 @@ func (n *Nat) Handle(subject string, c component, lines []Message) []Message {
 		lines = n.getSingleDetail(c, "Deleted Nat")
 	case "nats.find":
 		for _, cx := range c.getFoundComponents() {
-			lines = append(lines, n.getSingleDetail(cx, "Found Nats")...)
+			lines = append(lines, n.getSingleDetail(cx, "Found Nat")...)
 		}
 	}
 	return lines
@@ -39,7 +39,7 @@ func (n *Nat) getSingleDetail(c component, prefix string) (lines []Message) {
 	if status == "errored" {
 		level = "ERROR"
 	}
-	if status != "errored" && status != "completed" {
+	if status != "errored" && status != "completed" && status != "" {
 		return lines
 	}
 	lines = append(lines, Message{Body: " " + name, Level: level})

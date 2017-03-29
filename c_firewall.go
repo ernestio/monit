@@ -23,7 +23,7 @@ func (n *Firewall) Handle(subject string, c component, lines []Message) []Messag
 		lines = n.getSingleDetail(c, "Deleted Firewall")
 	case "firewalls.find":
 		for _, cx := range c.getFoundComponents() {
-			lines = append(lines, n.getSingleDetail(cx, "Found Firewalls")...)
+			lines = append(lines, n.getSingleDetail(cx, "Found Firewall")...)
 		}
 	}
 	return lines
@@ -39,7 +39,7 @@ func (n *Firewall) getSingleDetail(c component, prefix string) (lines []Message)
 	if status == "errored" {
 		level = "ERROR"
 	}
-	if status != "errored" && status != "completed" {
+	if status != "errored" && status != "completed" && status != "" {
 		return lines
 	}
 	lines = append(lines, Message{Body: " " + name, Level: level})

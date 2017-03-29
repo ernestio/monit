@@ -23,7 +23,7 @@ func (n *Vpc) Handle(subject string, c component, lines []Message) []Message {
 		lines = n.getSingleDetail(c, "Deleted VPC")
 	case "vpcs.find":
 		for _, cx := range c.getFoundComponents() {
-			lines = append(lines, n.getSingleDetail(cx, "Found VPCs")...)
+			lines = append(lines, n.getSingleDetail(cx, "Found VPC")...)
 		}
 	}
 	return lines
@@ -40,7 +40,7 @@ func (n *Vpc) getSingleDetail(c component, prefix string) (lines []Message) {
 	if status == "errored" {
 		level = "ERROR"
 	}
-	if status != "errored" && status != "completed" {
+	if status != "errored" && status != "completed" && status != "" {
 		return lines
 	}
 	lines = append(lines, Message{Body: " " + id, Level: level})

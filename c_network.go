@@ -21,7 +21,7 @@ func (n *Network) Handle(subject string, c component, lines []Message) []Message
 		lines = n.getSingleDetail(c, "Deleted Network")
 	case "networks.find":
 		for _, cx := range c.getFoundComponents() {
-			lines = append(lines, n.getSingleDetail(cx, "Found Networks")...)
+			lines = append(lines, n.getSingleDetail(cx, "Found Network")...)
 		}
 	}
 	return lines
@@ -38,7 +38,7 @@ func (n *Network) getSingleDetail(c component, prefix string) (lines []Message) 
 	if status == "errored" {
 		level = "ERROR"
 	}
-	if status != "errored" && status != "completed" {
+	if status != "errored" && status != "completed" && status != "" {
 		return lines
 	}
 	lines = append(lines, Message{Body: " " + name, Level: level})

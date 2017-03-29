@@ -23,7 +23,7 @@ func (n *Instance) Handle(subject string, c component, lines []Message) []Messag
 		lines = n.getSingleDetail(c, "Deleted Instance")
 	case "instances.find":
 		for _, cx := range c.getFoundComponents() {
-			lines = append(lines, n.getSingleDetail(cx, "Found Instances")...)
+			lines = append(lines, n.getSingleDetail(cx, "Found Instance")...)
 		}
 	}
 	return lines
@@ -40,7 +40,7 @@ func (n *Instance) getSingleDetail(c component, prefix string) (lines []Message)
 	if status == "errored" {
 		level = "ERROR"
 	}
-	if status != "errored" && status != "completed" {
+	if status != "errored" && status != "completed" && status != "" {
 		return lines
 	}
 	lines = append(lines, Message{Body: " " + name, Level: level})

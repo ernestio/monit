@@ -21,7 +21,7 @@ func (n *EBSVolume) Handle(subject string, c component, lines []Message) []Messa
 		lines = n.getSingleDetail(c, "Deleted EBS volume ")
 	case "ebs_volumes.find":
 		for _, cx := range c.getFoundComponents() {
-			lines = append(lines, n.getSingleDetail(cx, "Found EBS volumes")...)
+			lines = append(lines, n.getSingleDetail(cx, "Found EBS volume")...)
 		}
 	}
 	return lines
@@ -37,7 +37,7 @@ func (n *EBSVolume) getSingleDetail(c component, prefix string) (lines []Message
 	if status == "errored" {
 		level = "ERROR"
 	}
-	if status != "errored" && status != "completed" {
+	if status != "errored" && status != "completed" && status != "" {
 		return lines
 	}
 	lines = append(lines, Message{Body: " " + name, Level: level})
