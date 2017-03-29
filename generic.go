@@ -33,7 +33,7 @@ func (m *component) getFoundComponents() []component {
 	components, ok := (*m)["components"].([]interface{})
 	if ok {
 		for _, x := range components {
-			c = append(c, x.(component))
+			c = append(c, x.(map[string]interface{}))
 		}
 	}
 
