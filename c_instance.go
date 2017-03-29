@@ -16,13 +16,15 @@ func (n *Instance) Handle(subject string, c component, lines []Message) []Messag
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 	case "instance.create":
-		lines = n.getSingleDetail(c, "Instance created")
+		lines = n.getSingleDetail(c, "Created Instance")
 	case "instance.update":
-		lines = n.getSingleDetail(c, "Instance udpated")
+		lines = n.getSingleDetail(c, "Updated Instance")
 	case "instance.delete":
-		lines = n.getSingleDetail(c, "Instance delete")
+		lines = n.getSingleDetail(c, "Deleted Instance")
 	case "instances.find":
-		lines = n.getSingleDetail(c, "Instance find")
+		for _, cx := range c.getFoundComponents() {
+			lines = append(lines, n.getSingleDetail(cx, "Found Instances")...)
+		}
 	}
 	return lines
 }

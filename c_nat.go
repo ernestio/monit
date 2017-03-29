@@ -16,13 +16,15 @@ func (n *Nat) Handle(subject string, c component, lines []Message) []Message {
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 	case "nat.create":
-		lines = n.getSingleDetail(c, "Nat created")
+		lines = n.getSingleDetail(c, "Created Nat")
 	case "nat.update":
-		lines = n.getSingleDetail(c, "Nat updated")
+		lines = n.getSingleDetail(c, "Updated Nat")
 	case "nat.delete":
-		lines = n.getSingleDetail(c, "Nat deleted")
+		lines = n.getSingleDetail(c, "Deleted Nat")
 	case "nats.find":
-		lines = n.getSingleDetail(c, "Nat created")
+		for _, cx := range c.getFoundComponents() {
+			lines = append(lines, n.getSingleDetail(cx, "Found Nats")...)
+		}
 	}
 	return lines
 }

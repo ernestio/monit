@@ -16,13 +16,15 @@ func (n *Firewall) Handle(subject string, c component, lines []Message) []Messag
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 	case "firewall.create":
-		lines = n.getSingleDetail(c, "Firewall created")
+		lines = n.getSingleDetail(c, "Created Firewall")
 	case "firewall.update":
-		lines = n.getSingleDetail(c, "Firewall updated")
+		lines = n.getSingleDetail(c, "Updated Firewall")
 	case "firewall.delete":
-		lines = n.getSingleDetail(c, "Firewall deleted")
+		lines = n.getSingleDetail(c, "Deleted Firewall")
 	case "firewalls.find":
-		lines = n.getSingleDetail(c, "Firewall found")
+		for _, cx := range c.getFoundComponents() {
+			lines = append(lines, n.getSingleDetail(cx, "Found Firewalls")...)
+		}
 	}
 	return lines
 }

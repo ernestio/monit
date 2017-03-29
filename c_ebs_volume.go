@@ -20,7 +20,9 @@ func (n *EBSVolume) Handle(subject string, c component, lines []Message) []Messa
 	case "ebs_volume.delete":
 		lines = n.getSingleDetail(c, "Deleted EBS volume ")
 	case "ebs_volumes.find":
-		lines = n.getSingleDetail(c, "Found EBS volume ")
+		for _, cx := range c.getFoundComponents() {
+			lines = append(lines, n.getSingleDetail(cx, "Found EBS volumes")...)
+		}
 	}
 	return lines
 }

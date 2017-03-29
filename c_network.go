@@ -16,11 +16,13 @@ func (n *Network) Handle(subject string, c component, lines []Message) []Message
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 	case "network.create":
-		lines = n.getSingleDetail(c, "Network created")
+		lines = n.getSingleDetail(c, "Created Network")
 	case "network.delete":
-		lines = n.getSingleDetail(c, "Network deleted")
+		lines = n.getSingleDetail(c, "Deleted Network")
 	case "networks.find":
-		lines = n.getSingleDetail(c, "Network found")
+		for _, cx := range c.getFoundComponents() {
+			lines = append(lines, n.getSingleDetail(cx, "Found Networks")...)
+		}
 	}
 	return lines
 }

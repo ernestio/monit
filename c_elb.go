@@ -22,8 +22,9 @@ func (n *ELB) Handle(subject string, c component, lines []Message) []Message {
 	case "elb.delete":
 		lines = n.getSingleDetail(c, "Deleted ELB")
 	case "elbs.find":
-		lines = n.getSingleDetail(c, "Found ELB")
-
+		for _, cx := range c.getFoundComponents() {
+			lines = append(lines, n.getSingleDetail(cx, "Found ELBs")...)
+		}
 	}
 	return lines
 }

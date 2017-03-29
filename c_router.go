@@ -17,7 +17,7 @@ func (n *Router) Handle(subject string, c component, lines []Message) []Message 
 	switch subject {
 
 	case "router.create", "router.update":
-		lines = n.getSingleDetail(c, "Configured router")
+		lines = n.getSingleDetail(c, "Configured Router")
 	}
 	return lines
 }

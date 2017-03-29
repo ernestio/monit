@@ -16,13 +16,15 @@ func (n *Vpc) Handle(subject string, c component, lines []Message) []Message {
 	subject = parts[0] + "." + parts[1]
 	switch subject {
 	case "vpc.create":
-		lines = n.getSingleDetail(c, "VPC created")
+		lines = n.getSingleDetail(c, "Created VPC")
 	case "vpc.update":
-		lines = n.getSingleDetail(c, "VPC udpated")
+		lines = n.getSingleDetail(c, "Updated VPC")
 	case "vpc.delete":
-		lines = n.getSingleDetail(c, "VPC deleted")
+		lines = n.getSingleDetail(c, "Deleted VPC")
 	case "vpcs.find":
-		lines = n.getSingleDetail(c, "VPC Found")
+		for _, cx := range c.getFoundComponents() {
+			lines = append(lines, n.getSingleDetail(cx, "Found VPCs")...)
+		}
 	}
 	return lines
 }
