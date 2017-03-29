@@ -42,7 +42,7 @@ func (n *Network) getSingleDetail(c component, prefix string) (lines []Message) 
 		return lines
 	}
 	lines = append(lines, Message{Body: " " + name, Level: level})
-	lines = append(lines, Message{Body: "   IP     : " + ip, Level: ""})
+	lines = append(lines, Message{Body: "   Subnet : " + ip, Level: ""})
 	id, _ := c["network_aws_id"].(string)
 	if id != "" {
 		lines = append(lines, Message{Body: "   AWS ID : " + id, Level: ""})
