@@ -85,6 +85,9 @@ func genericHandler(msg *nats.Msg) {
 	case "rds_instances", "rds_instance":
 		var nt RDSInstance
 		msgLines = nt.Handle(msg.Subject, c, msgLines)
+	case "internet_gateway", "internet_gateways":
+		var nt InternetGateway
+		msgLines = nt.Handle(msg.Subject, c, msgLines)
 	default:
 		log.Println("unsupported: " + msg.Subject)
 	}
