@@ -88,6 +88,45 @@ func genericHandler(msg *nats.Msg) {
 	case "internet_gateway", "internet_gateways":
 		var nt InternetGateway
 		msgLines = nt.Handle(msg.Subject, c, msgLines)
+	case "public_ip", "public_ips":
+		var h PublicIP
+		msgLines = h.Handle(msg.Subject, c, msgLines)
+	case "virtual_network", "virtual_networks":
+		var h VirtualNetwork
+		msgLines = h.Handle(msg.Subject, c, msgLines)
+	case "resource_group", "resource_groups":
+		var h ResourceGroup
+		msgLines = h.Handle(msg.Subject, c, msgLines)
+	case "subnet", "subnets":
+		var h Subnet
+		msgLines = h.Handle(msg.Subject, c, msgLines)
+	case "network_interface", "network_interfaces":
+		var h NetworkInterface
+		msgLines = h.Handle(msg.Subject, c, msgLines)
+	case "storage_account", "storage_accounts":
+		var h StorageAccount
+		msgLines = h.Handle(msg.Subject, c, msgLines)
+	case "storage_container", "storage_containers":
+		var h StorageContainer
+		msgLines = h.Handle(msg.Subject, c, msgLines)
+	case "virtual_machine", "virtual_machines":
+		var h VirtualMachine
+		msgLines = h.Handle(msg.Subject, c, msgLines)
+	case "lb", "lbs":
+		var h Lb
+		msgLines = h.Handle(msg.Subject, c, msgLines)
+	case "sql_server", "sql_servers":
+		var h SQLServer
+		msgLines = h.Handle(msg.Subject, c, msgLines)
+	case "local_network_gateway", "local_network_gateways":
+		var h LocalNetworkGateway
+		msgLines = h.Handle(msg.Subject, c, msgLines)
+	case "network_security_group", "network_security_groups":
+		var h NetworkSecurityGroup
+		msgLines = h.Handle(msg.Subject, c, msgLines)
+	case "sql_database", "sql_databases":
+		var h SQLDatabase
+		msgLines = h.Handle(msg.Subject, c, msgLines)
 	default:
 		log.Println("unsupported: " + msg.Subject)
 	}
