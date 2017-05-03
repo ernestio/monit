@@ -43,7 +43,7 @@ func (n *NetworkInterface) getSingleDetail(c component, prefix string) (lines []
 	lines = append(lines, Message{Body: " " + name, Level: level})
 	id, _ := c["id"].(string)
 	if id != "" {
-		lines = append(lines, Message{Body: "   AWS ID : " + id, Level: ""})
+		lines = append(lines, Message{Body: "   ID : " + id, Level: ""})
 	}
 	if status != "" {
 		lines = append(lines, Message{Body: "   Status : " + status, Level: ""})
