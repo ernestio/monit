@@ -12,7 +12,7 @@ type Service struct {
 func (n *Service) Handle(subject string, lines []Message) []Message {
 	switch subject {
 	case "service.create":
-		lines = append(lines, Message{Body: "Applying you definition", Level: "INFO"})
+		lines = append(lines, Message{Body: "Applying your definition", Level: "INFO"})
 	case "service.delete":
 		lines = append(lines, Message{Body: "Starting environment deletion", Level: "INFO"})
 	case "service.create.done":
