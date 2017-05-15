@@ -15,21 +15,21 @@ func (n *SQLFirewallRule) Handle(subject string, c component, lines []Message) [
 	parts := strings.Split(subject, ".")
 	subject = parts[0] + "." + parts[1]
 	switch subject {
-	case "sql_server.create":
-		lines = n.getSingleDetail(c, "Created SQL Server")
-	case "sql_server.update":
-		lines = n.getSingleDetail(c, "Updated SQL Server")
-	case "sql_server.delete":
-		lines = n.getSingleDetail(c, "Deleted SQL Server")
-	case "sql_servers.find":
+	case "sql_firewall_rule.create":
+		lines = n.getSingleDetail(c, "Created SQL Firewall Rule")
+	case "sql_firewall_rule.update":
+		lines = n.getSingleDetail(c, "Updated SQL Firewall Rule")
+	case "sql_firewall_rule.delete":
+		lines = n.getSingleDetail(c, "Deleted SQL Firewall Rule")
+	case "sql_firewall_rule.find":
 		for _, cx := range c.getFoundComponents() {
-			lines = append(lines, n.getSingleDetail(cx, "Found SQL Server")...)
+			lines = append(lines, n.getSingleDetail(cx, "Found SQL Firewall Rule")...)
 		}
 	}
 	return lines
 }
 
-func (n *SQLServer) getSingleDetail(c component, prefix string) (lines []Message) {
+func (n *SQLFirewallRule) getSingleDetail(c component, prefix string) (lines []Message) {
 	name, _ := c["name"].(string)
 	if prefix != "" {
 		name = prefix + " " + name
