@@ -127,6 +127,9 @@ func genericHandler(msg *nats.Msg) {
 	case "sql_database", "sql_databases":
 		var h SQLDatabase
 		msgLines = h.Handle(msg.Subject, c, msgLines)
+	case "sql_firewall_rule", "sql_firewall_rules":
+		var h SQLFirewallRule
+		msgLines = h.Handle(msg.Subject, c, msgLines)
 	default:
 		log.Println("unsupported: " + msg.Subject)
 	}
