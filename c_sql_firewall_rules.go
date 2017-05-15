@@ -21,7 +21,7 @@ func (n *SQLFirewallRule) Handle(subject string, c component, lines []Message) [
 		lines = n.getSingleDetail(c, "Updated SQL Firewall Rule")
 	case "sql_firewall_rule.delete":
 		lines = n.getSingleDetail(c, "Deleted SQL Firewall Rule")
-	case "sql_firewall_rule.find":
+	case "sql_firewall_rules.find":
 		for _, cx := range c.getFoundComponents() {
 			lines = append(lines, n.getSingleDetail(cx, "Found SQL Firewall Rule")...)
 		}
