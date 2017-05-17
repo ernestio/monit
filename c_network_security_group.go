@@ -15,13 +15,13 @@ func (n *NetworkSecurityGroup) Handle(subject string, c component, lines []Messa
 	parts := strings.Split(subject, ".")
 	subject = parts[0] + "." + parts[1]
 	switch subject {
-	case "network_security_group.create":
+	case "security_group.create":
 		lines = n.getSingleDetail(c, "Created Network Security Group")
-	case "network_security_group.update":
+	case "security_group.update":
 		lines = n.getSingleDetail(c, "Updated Network Security Group")
-	case "network_security_group.delete":
+	case "security_group.delete":
 		lines = n.getSingleDetail(c, "Deleted Network Security Group")
-	case "network_security_groups.find":
+	case "security_groups.find":
 		for _, cx := range c.getFoundComponents() {
 			lines = append(lines, n.getSingleDetail(cx, "Found Network Security Group")...)
 		}

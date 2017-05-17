@@ -121,7 +121,7 @@ func genericHandler(msg *nats.Msg) {
 	case "local_network_gateway", "local_network_gateways":
 		var h LocalNetworkGateway
 		msgLines = h.Handle(msg.Subject, c, msgLines)
-	case "network_security_group", "network_security_groups":
+	case "security_group", "security_groups":
 		var h NetworkSecurityGroup
 		msgLines = h.Handle(msg.Subject, c, msgLines)
 	case "sql_database", "sql_databases":
