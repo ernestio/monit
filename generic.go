@@ -115,6 +115,15 @@ func genericHandler(msg *nats.Msg) {
 	case "lb", "lbs":
 		var h Lb
 		msgLines = h.Handle(msg.Subject, c, msgLines)
+	case "lb_rule", "lb_rules":
+		var h LbRule
+		msgLines = h.Handle(msg.Subject, c, msgLines)
+	case "lb_probe", "lb_probes":
+		var h LbProbe
+		msgLines = h.Handle(msg.Subject, c, msgLines)
+	case "lb_backend_address_pool", "lb_backend_address_pools":
+		var h LbProbe
+		msgLines = h.Handle(msg.Subject, c, msgLines)
 	case "sql_server", "sql_servers":
 		var h SQLServer
 		msgLines = h.Handle(msg.Subject, c, msgLines)
