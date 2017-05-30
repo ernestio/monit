@@ -30,9 +30,9 @@ func (n *VirtualNetwork) Handle(subject string, c component, lines []Message) []
 }
 
 func (n *VirtualNetwork) getSingleDetail(c component, prefix string) (lines []Message) {
-	address_space := c["address_space"].([]interface{})
+	addressSpace := c["address_space"].([]interface{})
 	var netlist []string
-	for _, a := range address_space {
+	for _, a := range addressSpace {
 		netlist = append(netlist, a.(string))
 	}
 	networks := strings.Join(netlist, ", ")
