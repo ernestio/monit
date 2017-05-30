@@ -4,7 +4,9 @@
 
 package main
 
-import "strings"
+import (
+	"strings"
+)
 
 // VirtualNetwork : ...
 type VirtualNetwork struct {
@@ -28,7 +30,12 @@ func (n *VirtualNetwork) Handle(subject string, c component, lines []Message) []
 }
 
 func (n *VirtualNetwork) getSingleDetail(c component, prefix string) (lines []Message) {
-	ip, _ := c["address_space"].(string)
+	address_space := c["address_space"].([]interface{})
+	var netlist []string
+	for _, a := range address_space {
+		netlist = append(netlist, a.(string))
+	}
+	networks := strings.Join(netlist, ", ")
 	name, _ := c["name"].(string)
 	if prefix != "" {
 		name = prefix + " " + name
@@ -42,7 +49,7 @@ func (n *VirtualNetwork) getSingleDetail(c component, prefix string) (lines []Me
 		return lines
 	}
 	lines = append(lines, Message{Body: " " + name, Level: level})
-	lines = append(lines, Message{Body: "   Address Space : " + ip, Level: ""})
+	lines = append(lines, Message{Body: "   Address Space : " + networks, Level: ""})
 	id, _ := c["id"].(string)
 	if id != "" {
 		lines = append(lines, Message{Body: "   ID : " + id, Level: ""})
