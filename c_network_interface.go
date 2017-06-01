@@ -4,7 +4,9 @@
 
 package main
 
-import "strings"
+import (
+	"strings"
+)
 
 // NetworkInterface : ...
 type NetworkInterface struct {
@@ -28,6 +30,7 @@ func (n *NetworkInterface) Handle(subject string, c component, lines []Message) 
 }
 
 func (n *NetworkInterface) getSingleDetail(c component, prefix string) (lines []Message) {
+	ip, _ := c["private_ip_address"].(string)
 	name, _ := c["name"].(string)
 	if prefix != "" {
 		name = prefix + " " + name
@@ -41,6 +44,7 @@ func (n *NetworkInterface) getSingleDetail(c component, prefix string) (lines []
 		return lines
 	}
 	lines = append(lines, Message{Body: " " + name, Level: level})
+	lines = append(lines, Message{Body: "   IP : " + ip, Level: ""})
 	id, _ := c["id"].(string)
 	if id != "" {
 		lines = append(lines, Message{Body: "   ID : " + id, Level: ""})
