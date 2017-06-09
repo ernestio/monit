@@ -22,7 +22,7 @@ type Message struct {
 	Level string `json:"level"`
 }
 
-// Notification stores any user output sent from the FSM
+// Notification stores any user output sent from the Scheduler
 type Notification struct {
 	ID       string   `json:"id"`
 	Service  string   `json:"service"`

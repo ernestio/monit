@@ -21,7 +21,7 @@ type monitorConfig struct {
 func setup() {
 	var err error
 	// Open Nats connection
-	n, err = nats.Connect(os.Getenv("NATS_URI"))
+	nc, err = nats.Connect(os.Getenv("NATS_URI"))
 	if err != nil {
 		log.Println("Could not connect to nats")
 		return
@@ -29,7 +29,7 @@ func setup() {
 
 	secret = os.Getenv("JWT_SECRET")
 	if secret == "" {
-		token, err := n.Request("config.get.jwt_token", []byte(""), 1*time.Second)
+		token, err := nc.Request("config.get.jwt_token", []byte(""), 1*time.Second)
 		if err != nil {
 			panic("Can't get jwt_config config")
 		}
@@ -38,7 +38,7 @@ func setup() {
 	}
 
 	cfg := monitorConfig{}
-	msg, err := n.Request("config.get.monitor", []byte(""), 1*time.Second)
+	msg, err := nc.Request("config.get.monitor", []byte(""), 1*time.Second)
 	if err != nil {
 		panic("Can't get monitor config")
 	}
