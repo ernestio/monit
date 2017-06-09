@@ -34,39 +34,11 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/events", authMiddleware)
 
-	// Subscribe to service events
-	serviceSubjects := []string{
-		"service.create",
-		"service.delete",
-		"service.import",
-	}
-
-	for _, s := range serviceSubjects {
-		_, err = nc.Subscribe(s, serviceHandler)
-		if err != nil {
-			log.Println(err)
-			return
-		}
-	}
-
-	// Subscribe to component events
-	componentSubjects := []string{
-		"*.create.*",
-		"*.create.*.*",
-		"*.update.*",
-		"*.update.*.*",
-		"*.delete.*",
-		"*.delete.*.*",
-		"*.find.*",
-		"*.find.*.*",
-	}
-
-	for _, s := range componentSubjects {
-		_, err = nc.Subscribe(s, componentHandler)
-		if err != nil {
-			log.Println(err)
-			return
-		}
+	// Subscribe to subjects
+	_, err = nc.Subscribe(">", natsHandler)
+	if err != nil {
+		log.Println(err)
+		return
 	}
 
 	// Start Listening

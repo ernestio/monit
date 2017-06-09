@@ -6,6 +6,7 @@ deps:
 	go get gopkg.in/redis.v3
 	go get github.com/nats-io/nats
 	go get github.com/dgrijalva/jwt-go
+	go get github.com/r3labs/pattern
 
 dev-deps: deps
 	go get github.com/smartystreets/goconvey/convey

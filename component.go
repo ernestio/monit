@@ -22,7 +22,7 @@ type Component struct {
 	Service  string `json:"service,omitempty"`
 }
 
-func componentHandler(msg *nats.Msg) {
+func processComponent(msg *nats.Msg) {
 	var c Component
 	if err := json.Unmarshal(msg.Data, &c); err != nil {
 		panic(err)

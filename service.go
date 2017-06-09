@@ -6,9 +6,12 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"strings"
+	"time"
 
 	"github.com/nats-io/nats"
+	"github.com/r3labs/sse"
 )
 
 type Service struct {
@@ -16,7 +19,7 @@ type Service struct {
 	Changes []Component `json:"changes"`
 }
 
-func serviceHandler(msg *nats.Msg) {
+func processService(msg *nats.Msg) {
 	var s Service
 	if err := json.Unmarshal(msg.Data, &s); err != nil {
 		panic(err)
@@ -29,7 +32,22 @@ func serviceHandler(msg *nats.Msg) {
 		panic(err)
 	}
 
-	publishEvent(id, data)
+	switch msg.Subject {
+	case "service.create", "service.delete":
+		// Create new stream
+		log.Println("Creating stream: ", id)
+		ss.CreateStream(id)
+		publishEvent(id, data)
+	case "service.create.done", "service.create.error", "service.delete.done", "service.delete.error", "service.import.done", "service.import.error":
+		publishEvent(id, data)
+		// publishEvent(id, cliHangup)
+		time.Sleep(10 * time.Millisecond)
+		// Remove stream when the build completes
+		log.Println("Closing stream: ", id)
+		go func(ss *sse.Server) {
+			ss.RemoveStream(id)
+		}(ss)
+	}
 }
 
 func (s *Service) getID() string {
