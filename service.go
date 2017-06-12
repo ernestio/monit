@@ -16,11 +16,15 @@ import (
 
 type Service struct {
 	ID      string      `json:"id"`
+	Subject string      `json:"_subject"`
 	Changes []Component `json:"changes"`
 }
 
 func processService(msg *nats.Msg) {
 	var s Service
+
+	s.Subject = msg.Subject
+
 	if err := json.Unmarshal(msg.Data, &s); err != nil {
 		panic(err)
 	}
@@ -41,6 +45,7 @@ func processService(msg *nats.Msg) {
 	case "service.create.done", "service.create.error", "service.delete.done", "service.delete.error", "service.import.done", "service.import.error":
 		publishEvent(id, data)
 		// publishEvent(id, cliHangup)
+
 		time.Sleep(10 * time.Millisecond)
 		// Remove stream when the build completes
 		log.Println("Closing stream: ", id)

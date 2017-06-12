@@ -13,6 +13,7 @@ import (
 
 type Component struct {
 	ID       string `json:"_component_id"`
+	Subject  string `json:"_subject"`
 	Type     string `json:"_component"`
 	State    string `json:"_state"`
 	Action   string `json:"_action"`
@@ -24,6 +25,9 @@ type Component struct {
 
 func processComponent(msg *nats.Msg) {
 	var c Component
+
+	c.Subject = msg.Subject
+
 	if err := json.Unmarshal(msg.Data, &c); err != nil {
 		panic(err)
 	}
