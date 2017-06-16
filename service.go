@@ -26,14 +26,16 @@ func processService(msg *nats.Msg) {
 	s.Subject = msg.Subject
 
 	if err := json.Unmarshal(msg.Data, &s); err != nil {
-		panic(err)
+		log.Println(err)
+		return
 	}
 
 	id := s.getID()
 
 	data, err := json.Marshal(s)
 	if err != nil {
-		panic(err)
+		log.Println(err)
+		return
 	}
 
 	switch msg.Subject {
@@ -41,11 +43,9 @@ func processService(msg *nats.Msg) {
 		// Create new stream
 		log.Println("Creating stream: ", id)
 		ss.CreateStream(id)
-		publishEvent(id, data)
+		ss.Publish(id, data)
 	case "service.create.done", "service.create.error", "service.delete.done", "service.delete.error", "service.import.done", "service.import.error":
-		publishEvent(id, data)
-		// publishEvent(id, cliHangup)
-
+		ss.Publish(id, data)
 		time.Sleep(10 * time.Millisecond)
 		// Remove stream when the build completes
 		log.Println("Closing stream: ", id)

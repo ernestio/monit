@@ -6,6 +6,7 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"strings"
 
 	"github.com/nats-io/nats"
@@ -29,17 +30,19 @@ func processComponent(msg *nats.Msg) {
 	c.Subject = msg.Subject
 
 	if err := json.Unmarshal(msg.Data, &c); err != nil {
-		panic(err)
+		log.Println(err)
+		return
 	}
 
 	id := c.getID()
 
 	data, err := json.Marshal(c)
 	if err != nil {
-		panic(err)
+		log.Println(err)
+		return
 	}
 
-	publishEvent(id, data)
+	ss.Publish(id, data)
 }
 
 func (c *Component) getID() string {
