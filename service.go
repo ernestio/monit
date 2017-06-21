@@ -39,15 +39,13 @@ func processService(msg *nats.Msg) {
 	}
 
 	switch msg.Subject {
-	case "service.create", "service.delete":
-		// Create new stream
+	case "service.create", "service.delete", "service.import":
 		log.Println("Creating stream: ", id)
 		ss.CreateStream(id)
 		ss.Publish(id, data)
 	case "service.create.done", "service.create.error", "service.delete.done", "service.delete.error", "service.import.done", "service.import.error":
 		ss.Publish(id, data)
 		time.Sleep(10 * time.Millisecond)
-		// Remove stream when the build completes
 		log.Println("Closing stream: ", id)
 		go func(ss *sse.Server) {
 			ss.RemoveStream(id)
