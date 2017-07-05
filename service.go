@@ -16,6 +16,7 @@ import (
 
 type Service struct {
 	ID      string      `json:"id"`
+	Name    string      `json:"name"`
 	Subject string      `json:"_subject"`
 	Changes []Component `json:"changes"`
 }
