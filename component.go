@@ -10,8 +10,10 @@ import (
 	"strings"
 
 	"github.com/nats-io/nats"
+	"github.com/r3labs/sse"
 )
 
+// Component : holds component values
 type Component struct {
 	ID       string `json:"_component_id"`
 	Subject  string `json:"_subject"`
@@ -35,19 +37,24 @@ func processComponent(msg *nats.Msg) {
 	}
 
 	id := c.getID()
-
 	data, err := json.Marshal(c)
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
-	ss.Publish(id, data)
+	if ss.StreamExists(id) {
+		ss.Publish(id, &sse.Event{Data: data})
+	}
 }
 
 func (c *Component) getID() string {
-	var pieces []string
-	pieces = strings.Split(c.Service, "-")
+	if strings.Contains(c.Service, "-") {
+		var pieces []string
+		pieces = strings.Split(c.Service, "-")
 
-	return pieces[len(pieces)-1]
+		return pieces[len(pieces)-1]
+	}
+
+	return c.Service
 }

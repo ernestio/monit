@@ -14,6 +14,7 @@ import (
 	"github.com/r3labs/sse"
 )
 
+// Service : holds service values
 type Service struct {
 	ID      string      `json:"id"`
 	Name    string      `json:"name"`
@@ -43,12 +44,13 @@ func processService(msg *nats.Msg) {
 	case "service.create", "service.delete", "service.import":
 		log.Println("Creating stream: ", id)
 		ss.CreateStream(id)
-		ss.Publish(id, data)
+		ss.Publish(id, &sse.Event{Data: data})
 	case "service.create.done", "service.create.error", "service.delete.done", "service.delete.error", "service.import.done", "service.import.error":
-		ss.Publish(id, data)
-		time.Sleep(10 * time.Millisecond)
-		log.Println("Closing stream: ", id)
+		ss.Publish(id, &sse.Event{Data: data})
 		go func(ss *sse.Server) {
+			// Wait for any late connecting clients before closing stream
+			time.Sleep(1 * time.Second)
+			log.Println("Closing stream: ", id)
 			ss.RemoveStream(id)
 		}(ss)
 	}

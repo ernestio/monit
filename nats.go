@@ -34,7 +34,5 @@ func natsHandler(msg *nats.Msg) {
 		processService(msg)
 	case pattern.Match(msg.Subject, components...):
 		processComponent(msg)
-	default:
-		return
 	}
 }

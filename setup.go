@@ -29,8 +29,8 @@ func setup() {
 
 	secret = os.Getenv("JWT_SECRET")
 	if secret == "" {
-		token, err := nc.Request("config.get.jwt_token", []byte(""), 1*time.Second)
-		if err != nil {
+		token, aerr := nc.Request("config.get.jwt_token", []byte(""), 1*time.Second)
+		if aerr != nil {
 			panic("Can't get jwt_config config")
 		}
 
