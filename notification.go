@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/nats-io/nats"
+	"github.com/r3labs/sse"
 )
 
 // Messages holds a collection of the type Message
@@ -42,7 +43,6 @@ func (n *Notification) getServiceID() string {
 
 func processNotification(notification *Notification, msg *nats.Msg) error {
 	return json.Unmarshal(msg.Data, &notification)
-
 }
 
 func publishMessage(service string, msg *Message) {
@@ -52,6 +52,6 @@ func publishMessage(service string, msg *Message) {
 		log.Println("Could not encode message: ")
 		log.Println(err)
 	} else {
-		s.Publish(service, data)
+		s.Publish(service, &sse.Event{Data: data})
 	}
 }
