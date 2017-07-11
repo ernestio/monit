@@ -13,8 +13,8 @@ import (
 	"github.com/r3labs/sse"
 )
 
-var n *nats.Conn
-var s *sse.Server
+var nc *nats.Conn
+var ss *sse.Server
 var host string
 var port string
 var secret string
@@ -22,71 +22,20 @@ var err error
 
 func main() {
 	setup()
-	defer n.Close()
+	defer nc.Close()
 
 	// Create new SSE server
-	s = sse.New()
-	s.AutoStream = true
-	s.EncodeBase64 = true
-	defer s.Close()
+	ss = sse.New()
+	ss.AutoStream = true
+	ss.EncodeBase64 = true
+	defer ss.Close()
 
 	// Create new HTTP Server and add the route handler
 	mux := http.NewServeMux()
 	mux.HandleFunc("/events", authMiddleware)
 
-	// Start nats handler, subscribe to all events related with the monitor
-	_, err = n.Subscribe("monitor.user", natsHandler)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	_, err = n.Subscribe("service.create", natsHandler)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	_, err = n.Subscribe("service.delete", natsHandler)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	_, err = n.Subscribe("service.create.done", natsHandler)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	_, err = n.Subscribe("service.create.error", natsHandler)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	_, err = n.Subscribe("service.delete.done", natsHandler)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	_, err = n.Subscribe("service.delete.error", natsHandler)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	_, err = n.Subscribe("service.import.done", natsHandler)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	_, err = n.Subscribe("service.import.error", natsHandler)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
-	_, err = n.Subscribe("*.*.*", genericHandler)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	_, err = n.Subscribe("*.*.*.*", genericHandler)
+	// Subscribe to subjects
+	_, err = nc.Subscribe(">", natsHandler)
 	if err != nil {
 		log.Println(err)
 		return

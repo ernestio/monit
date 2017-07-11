@@ -51,5 +51,5 @@ func authMiddleware(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Pass to sse server
-	s.HTTPHandler(w, r)
+	ss.HTTPHandler(w, r)
 }

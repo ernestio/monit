@@ -33,43 +33,43 @@ func TestMain(t *testing.T) {
 
 	Convey("Given a new server", t, func() {
 		// New Server
-		s = sse.New()
-		defer s.Close()
+		ss = sse.New()
+		defer ss.Close()
 
 		mux := http.NewServeMux()
-		mux.HandleFunc("/events", s.HTTPHandler)
+		mux.HandleFunc("/events", ss.HTTPHandler)
 		hs := httptest.NewServer(mux)
 		url := hs.URL + "/events"
 
 		Convey("When listening for NATS messages", func() {
-			createEvents := []string{"service.create", "service.delete"}
+			createEvents := []string{"service.create", "service.delete", "service.import"}
 			for _, event := range createEvents {
 				Convey("On receiving "+event, func() {
-					msg := nats.Msg{Subject: event, Data: []byte(`{"service": "test"}`)}
+					msg := nats.Msg{Subject: event, Data: []byte(`{"id": "test"}`)}
 					natsHandler(&msg)
 
 					time.Sleep(time.Millisecond * 10)
 
 					Convey("It should create a stream for the service", func() {
-						So(s.StreamExists("test"), ShouldBeTrue)
+						So(ss.StreamExists("test"), ShouldBeTrue)
 					})
 
 				})
 			}
 
-			deleteEvents := []string{"service.create.done", "service.delete.done", "service.create.error", "service.delete.error"}
+			deleteEvents := []string{"service.create.done", "service.delete.done", "service.import.done", "service.create.error", "service.delete.error", "service.import.error"}
 			for _, event := range deleteEvents {
-				s.CreateStream("test")
+				ss.CreateStream("test")
 				time.Sleep(time.Millisecond * 10)
 
 				Convey("On receiving "+event, func() {
-					msg := nats.Msg{Subject: event, Data: []byte(`{"service": "test"}`)}
+					msg := nats.Msg{Subject: event, Data: []byte(`{"id": "test"}`)}
 					natsHandler(&msg)
 
 					time.Sleep(time.Millisecond * 1500)
 
 					Convey("It should remove the services stream", func() {
-						So(s.StreamExists("test"), ShouldBeFalse)
+						So(ss.StreamExists("test"), ShouldBeFalse)
 					})
 
 				})
@@ -77,26 +77,26 @@ func TestMain(t *testing.T) {
 
 			Convey("On receiving an unknown message", func() {
 				// Clean server
-				s.RemoveStream("test")
+				ss.RemoveStream("test")
 				time.Sleep(time.Millisecond * 10)
 
-				msg := nats.Msg{Subject: "test.event", Data: []byte(`{"service": "test"}`)}
+				msg := nats.Msg{Subject: "test.event", Data: []byte(`{"id": "test"}`)}
 				natsHandler(&msg)
 
 				Convey("It should not create a stream", func() {
-					So(s.StreamExists("test"), ShouldBeFalse)
+					So(ss.StreamExists("test"), ShouldBeFalse)
 				})
 			})
 
-			Convey("When receiving monitor.user", func() {
-				testEvent := `{"service": "test", "messages":[{"body": "test", "color": "blue"}]}`
-				msg := nats.Msg{Subject: "monitor.user", Data: []byte(testEvent)}
+			Convey("When receiving component event network.create.aws.done", func() {
+				testEvent := `{"service": "test", "name": "network"}`
+				msg := nats.Msg{Subject: "network.create.aws.done", Data: []byte(testEvent)}
 
 				Convey("And a stream exists", func() {
 					rcv := make(chan *sse.Event)
 					cl := sse.NewClient(url)
 
-					s.CreateStream("test")
+					ss.CreateStream("test")
 					time.Sleep(time.Millisecond * 10)
 
 					go func() {
@@ -107,14 +107,19 @@ func TestMain(t *testing.T) {
 					Convey("It should publish a message to the stream", func() {
 						natsHandler(&msg)
 
-						event, err := wait(rcv, time.Millisecond*100)
+						for {
+							event, err := wait(rcv, time.Millisecond*100)
+							So(err, ShouldBeNil)
 
-						So(err, ShouldBeNil)
-						So(string(event.Data), ShouldEqual, `{"body":"test","level":""}`)
+							if len(event.Data) > 0 {
+								So(string(event.Data), ShouldEqual, `{"_component_id":"","_subject":"network.create.aws.done","_component":"","_state":"","_action":"","_provider":"","name":"network","service":"test"}`)
+								break
+							}
+						}
 					})
 				})
 
-				s.RemoveStream("test")
+				ss.RemoveStream("test")
 
 				Convey("And a stream doesn't exist", func() {
 					rcv := make(chan *sse.Event)
@@ -122,19 +127,9 @@ func TestMain(t *testing.T) {
 
 					time.Sleep(time.Millisecond * 10)
 
-					go func() {
-						_ = cl.SubscribeChan("test", rcv)
-					}()
-					time.Sleep(time.Millisecond * 10)
-
-					Convey("It should not publish a message to the stream", func() {
-						natsHandler(&msg)
-						event, err := wait(rcv, time.Millisecond*100)
-
-						So(err, ShouldBeNil)
-						if err != nil {
-							So(string(event.Data), ShouldNotEqual, `{"body":"test","color":"blue"}`)
-						}
+					Convey("It should error when connecting to the stream", func() {
+						err := cl.SubscribeChan("test", rcv)
+						So(err, ShouldNotBeNil)
 					})
 				})
 			})
