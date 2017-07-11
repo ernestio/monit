@@ -50,12 +50,11 @@ func processComponent(msg *nats.Msg) {
 }
 
 func (c *Component) getID() string {
-	if strings.Contains(c.Service, "-") {
-		var pieces []string
-		pieces = strings.Split(c.Service, "-")
-
-		return pieces[len(pieces)-1]
+	if len(c.Service) == 36 {
+		return c.Service
 	}
 
-	return c.Service
+	pieces := strings.Split(c.Service, "-")
+
+	return pieces[len(pieces)-1]
 }

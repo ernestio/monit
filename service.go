@@ -57,6 +57,10 @@ func processService(msg *nats.Msg) {
 }
 
 func (s *Service) getID() string {
+	if len(s.ID) == 36 {
+		return s.ID
+	}
+
 	var pieces []string
 	pieces = strings.Split(s.ID, "-")
 
