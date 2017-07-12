@@ -7,7 +7,6 @@ package main
 import (
 	"encoding/json"
 	"log"
-	"strings"
 	"time"
 
 	"github.com/nats-io/nats"
@@ -57,12 +56,5 @@ func processService(msg *nats.Msg) {
 }
 
 func (s *Service) getID() string {
-	if len(s.ID) == 36 {
-		return s.ID
-	}
-
-	var pieces []string
-	pieces = strings.Split(s.ID, "-")
-
-	return pieces[len(pieces)-1]
+	return s.ID
 }
