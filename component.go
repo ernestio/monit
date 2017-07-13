@@ -7,7 +7,6 @@ package main
 import (
 	"encoding/json"
 	"log"
-	"strings"
 
 	"github.com/nats-io/nats"
 	"github.com/r3labs/sse"
@@ -50,12 +49,5 @@ func processComponent(msg *nats.Msg) {
 }
 
 func (c *Component) getID() string {
-	if strings.Contains(c.Service, "-") {
-		var pieces []string
-		pieces = strings.Split(c.Service, "-")
-
-		return pieces[len(pieces)-1]
-	}
-
 	return c.Service
 }
