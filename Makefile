@@ -7,6 +7,7 @@ deps:
 	go get github.com/nats-io/nats
 	go get github.com/dgrijalva/jwt-go
 	go get github.com/r3labs/pattern
+	go get github.com/ernestio/ernest-config-client
 
 dev-deps: deps
 	go get github.com/smartystreets/goconvey/convey
