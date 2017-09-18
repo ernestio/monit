@@ -1,16 +1,13 @@
 # Monit
 
+master:  [![CircleCI](https://circleci.com/gh/ernestio/monit/tree/master.svg?style=shield)](https://circleci.com/gh/ernestio/monit/tree/master)  
+develop: [![CircleCI](https://circleci.com/gh/ernestio/monit/tree/develop.svg?style=shield)](https://circleci.com/gh/ernestio/monit/tree/develop)
+
 ## Synopsis
 
 This microservice listens to all `monitor.user` events that are fired off by the FSM. It allows users to listen to the event stream over SSE (Server Side Events)
 
 These events are collected into an inbox based on the monitor id passed by the user on an action. The inbox is opened on `service.create`, `service.delete` and closed on `service.create.done` and `service.delete.done`. If no inbox with the given ID exists when a user connects, one will be created.
-
-## Build status
-
-* Master: [![CircleCI Master](https://circleci.com/gh/ernestio/monit/tree/master.svg?style=svg)](https://circleci.com/gh/ernestio/monit/tree/master)
-* Develop: [![CircleCI Develop](https://circleci.com/gh/ernestio/monit/tree/develop.svg?style=svg)](https://circleci.com/gh/ernestio/monit/tree/develop)
-
 
 ## Installation
 

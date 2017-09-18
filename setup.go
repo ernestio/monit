@@ -6,11 +6,10 @@ package main
 
 import (
 	"encoding/json"
-	"log"
 	"os"
 	"time"
 
-	"github.com/nats-io/nats"
+	ecc "github.com/ernestio/ernest-config-client"
 )
 
 type monitorConfig struct {
@@ -21,11 +20,8 @@ type monitorConfig struct {
 func setup() {
 	var err error
 	// Open Nats connection
-	nc, err = nats.Connect(os.Getenv("NATS_URI"))
-	if err != nil {
-		log.Println("Could not connect to nats")
-		return
-	}
+	ec := ecc.NewConfig(os.Getenv("NATS_URI"))
+	nc = ec.Nats()
 
 	secret = os.Getenv("JWT_SECRET")
 	if secret == "" {
