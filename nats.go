@@ -10,13 +10,13 @@ import (
 )
 
 func natsHandler(msg *nats.Msg) {
-	var services = []string{
-		"service.create",
-		"service.create.*",
-		"service.delete",
-		"service.delete.*",
-		"service.import",
-		"service.import.*",
+	var buildss = []string{
+		"build.create",
+		"build.create.*",
+		"build.delete",
+		"build.delete.*",
+		"build.import",
+		"build.import.*",
 	}
 	var components = []string{
 		"*.create.*",
@@ -30,8 +30,8 @@ func natsHandler(msg *nats.Msg) {
 	}
 
 	switch {
-	case pattern.Match(msg.Subject, services...):
-		processService(msg)
+	case pattern.Match(msg.Subject, buildss...):
+		processBuild(msg)
 	case pattern.Match(msg.Subject, components...):
 		processComponent(msg)
 	}

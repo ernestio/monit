@@ -42,7 +42,7 @@ func TestMain(t *testing.T) {
 		url := hs.URL + "/events"
 
 		Convey("When listening for NATS messages", func() {
-			createEvents := []string{"service.create", "service.delete", "service.import"}
+			createEvents := []string{"build.create", "build.delete", "build.import"}
 			for _, event := range createEvents {
 				Convey("On receiving "+event, func() {
 					msg := nats.Msg{Subject: event, Data: []byte(`{"id": "test"}`)}
@@ -57,7 +57,7 @@ func TestMain(t *testing.T) {
 				})
 			}
 
-			deleteEvents := []string{"service.create.done", "service.delete.done", "service.import.done", "service.create.error", "service.delete.error", "service.import.error"}
+			deleteEvents := []string{"build.create.done", "build.delete.done", "build.import.done", "build.create.error", "build.delete.error", "build.import.error"}
 			for _, event := range deleteEvents {
 				ss.CreateStream("test")
 				time.Sleep(time.Millisecond * 10)

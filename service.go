@@ -13,16 +13,16 @@ import (
 	"github.com/r3labs/sse"
 )
 
-// Service : holds service values
-type Service struct {
+// Build : holds builds values
+type Build struct {
 	ID      string      `json:"id"`
 	Name    string      `json:"name"`
 	Subject string      `json:"_subject"`
 	Changes []Component `json:"changes"`
 }
 
-func processService(msg *nats.Msg) {
-	var s Service
+func processBuild(msg *nats.Msg) {
+	var s Build
 
 	s.Subject = msg.Subject
 
@@ -55,6 +55,6 @@ func processService(msg *nats.Msg) {
 	}
 }
 
-func (s *Service) getID() string {
-	return s.ID
+func (b *Build) getID() string {
+	return b.ID
 }
