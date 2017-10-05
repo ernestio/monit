@@ -13,16 +13,16 @@ import (
 	"github.com/r3labs/sse"
 )
 
-// Service : holds service values
-type Service struct {
+// Build : holds builds values
+type Build struct {
 	ID      string      `json:"id"`
 	Name    string      `json:"name"`
 	Subject string      `json:"_subject"`
 	Changes []Component `json:"changes"`
 }
 
-func processService(msg *nats.Msg) {
-	var s Service
+func processBuild(msg *nats.Msg) {
+	var s Build
 
 	s.Subject = msg.Subject
 
@@ -40,11 +40,11 @@ func processService(msg *nats.Msg) {
 	}
 
 	switch msg.Subject {
-	case "service.create", "service.delete", "service.import":
+	case "build.create", "build.delete", "build.import":
 		log.Println("Creating stream: ", id)
 		ss.CreateStream(id)
 		ss.Publish(id, &sse.Event{Data: data})
-	case "service.create.done", "service.create.error", "service.delete.done", "service.delete.error", "service.import.done", "service.import.error":
+	case "build.create.done", "build.create.error", "build.delete.done", "build.delete.error", "build.import.done", "build.import.error":
 		ss.Publish(id, &sse.Event{Data: data})
 		go func(ss *sse.Server) {
 			// Wait for any late connecting clients before closing stream
@@ -55,6 +55,6 @@ func processService(msg *nats.Msg) {
 	}
 }
 
-func (s *Service) getID() string {
-	return s.ID
+func (b *Build) getID() string {
+	return b.ID
 }
