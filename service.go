@@ -40,11 +40,11 @@ func processBuild(msg *nats.Msg) {
 	}
 
 	switch msg.Subject {
-	case "build.create", "build.delete", "build.import":
+	case "build.create", "build.delete", "build.import", "environment.sync":
 		log.Println("Creating stream: ", id)
 		ss.CreateStream(id)
 		ss.Publish(id, &sse.Event{Data: data})
-	case "build.create.done", "build.create.error", "build.delete.done", "build.delete.error", "build.import.done", "build.import.error":
+	case "build.create.done", "build.create.error", "build.delete.done", "build.delete.error", "build.import.done", "build.import.error", "environment.sync.done", "environment.sync.error":
 		ss.Publish(id, &sse.Event{Data: data})
 		go func(ss *sse.Server) {
 			// Wait for any late connecting clients before closing stream
