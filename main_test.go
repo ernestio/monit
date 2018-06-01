@@ -6,19 +6,15 @@ package main
 
 import (
 	"errors"
-	"net/http"
-	"net/http/httptest"
-	"testing"
 	"time"
 
-	"github.com/nats-io/nats"
-	"github.com/r3labs/sse"
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/r3labs/broadcast"
+	//. "github.com/smartystreets/goconvey/convey"
 )
 
-func wait(ch chan *sse.Event, duration time.Duration) (*sse.Event, error) {
+func wait(ch chan *broadcast.Event, duration time.Duration) (*broadcast.Event, error) {
 	var err error
-	var msg *sse.Event
+	var msg *broadcast.Event
 
 	select {
 	case event := <-ch:
@@ -28,6 +24,8 @@ func wait(ch chan *sse.Event, duration time.Duration) (*sse.Event, error) {
 	}
 	return msg, err
 }
+
+/*
 
 func TestMain(t *testing.T) {
 
@@ -138,3 +136,5 @@ func TestMain(t *testing.T) {
 	})
 
 }
+
+*/

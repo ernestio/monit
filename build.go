@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/nats-io/nats"
-	"github.com/r3labs/sse"
+	"github.com/r3labs/broadcast"
 )
 
 // Build : holds builds values
@@ -42,16 +42,16 @@ func processBuild(msg *nats.Msg) {
 	switch msg.Subject {
 	case "build.create", "build.delete", "build.import", "environment.sync":
 		log.Println("Creating stream: ", id)
-		ss.CreateStream(id)
-		ss.Publish(id, &sse.Event{Data: data})
+		bc.CreateStream(id)
+		bc.Publish(id, data)
 	case "build.create.done", "build.create.error", "build.delete.done", "build.delete.error", "build.import.done", "build.import.error", "environment.sync.done", "environment.sync.error":
-		ss.Publish(id, &sse.Event{Data: data})
-		go func(ss *sse.Server) {
+		bc.Publish(id, data)
+		go func(bc *broadcast.Server) {
 			// Wait for any late connecting clients before closing stream
 			time.Sleep(1 * time.Second)
 			log.Println("Closing stream: ", id)
-			ss.RemoveStream(id)
-		}(ss)
+			bc.RemoveStream(id)
+		}(bc)
 	}
 }
 

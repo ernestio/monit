@@ -9,7 +9,6 @@ import (
 	"log"
 
 	"github.com/nats-io/nats"
-	"github.com/r3labs/sse"
 )
 
 // Component : holds component values
@@ -43,8 +42,8 @@ func processComponent(msg *nats.Msg) {
 		return
 	}
 
-	if ss.StreamExists(id) {
-		ss.Publish(id, &sse.Event{Data: data})
+	if bc.StreamExists(id) {
+		bc.Publish(id, data)
 	}
 }
 
