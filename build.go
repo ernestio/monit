@@ -41,8 +41,10 @@ func processBuild(msg *nats.Msg) {
 
 	switch msg.Subject {
 	case "build.create", "build.delete", "build.import", "environment.sync":
-		log.Println("Creating stream: ", id)
-		bc.CreateStream(id)
+		if !bc.StreamExists(id) {
+			log.Println("Creating stream: ", id)
+			bc.CreateStream(id)
+		}
 		bc.Publish(id, data)
 	case "build.create.done", "build.create.error", "build.delete.done", "build.delete.error", "build.import.done", "build.import.error", "environment.sync.done", "environment.sync.error":
 		bc.Publish(id, data)
