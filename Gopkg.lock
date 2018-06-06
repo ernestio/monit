@@ -75,7 +75,7 @@
   branch = "master"
   name = "github.com/r3labs/broadcast"
   packages = ["."]
-  revision = "ad136844da33bb354c5eb043db28f23d77448fe9"
+  revision = "14785eeb98fb98aaddc4c114927ecc11990b121a"
 
 [[projects]]
   branch = "master"
