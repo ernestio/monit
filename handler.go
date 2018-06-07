@@ -47,7 +47,11 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 			authorized = true
 		} else {
-			msg := <-ch
+			msg, ok := <-ch
+			if !ok {
+				return
+			}
+
 			err := c.WriteMessage(websocket.TextMessage, msg.Data)
 			if err != nil {
 				internalerror(w)
