@@ -49,7 +49,7 @@ func authenticate(w http.ResponseWriter, c *websocket.Conn) (*Session, error) {
 	})
 
 	if err != nil || !token.Valid {
-		c.WriteMessage(mt, []byte(`{"status": "unauthorized"}`))
+		_ = c.WriteMessage(mt, []byte(`{"status": "unauthorized"}`))
 		return nil, unauthorized(w)
 	}
 

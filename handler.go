@@ -21,13 +21,14 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		upgradefail(w)
 		return
 	}
-	defer c.Close()
 
 	var authorized bool
 	var ch chan *broadcast.Event
 	var sub *broadcast.Subscriber
 
 	defer func() {
+		_ = c.Close()
+
 		if ch != nil && sub != nil {
 			sub.Disconnect(ch)
 		}
@@ -54,7 +55,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 			err := c.WriteMessage(websocket.TextMessage, msg.Data)
 			if err != nil {
-				internalerror(w)
+				_ = internalerror(w)
 				return
 			}
 		}
