@@ -37,8 +37,8 @@
   name = "github.com/r3labs/pattern"
 
 [[constraint]]
-  name = "github.com/r3labs/sse"
-  version = "1.0.1"
+  name = "github.com/r3labs/broadcast"
+  branch = "master"
 
 [[constraint]]
   name = "github.com/smartystreets/goconvey"

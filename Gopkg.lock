@@ -4,20 +4,20 @@
 [[projects]]
   name = "github.com/dgrijalva/jwt-go"
   packages = ["."]
-  revision = "dbeaa9332f19a944acb5736b4456cfcc02140e29"
-  version = "v3.1.0"
+  revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
+  version = "v3.2.0"
 
 [[projects]]
   branch = "master"
   name = "github.com/ernestio/ernest-config-client"
   packages = ["."]
-  revision = "d767474ae0ea944ec7ee6b35d2204d2439ee0fae"
+  revision = "3031a29ef3927b84e94180b64a88f7efed657195"
 
 [[projects]]
-  branch = "master"
-  name = "github.com/gopherjs/gopherjs"
-  packages = ["js"]
-  revision = "178c176a91fe05e3e6c58fa5c989bad19e6cdcb3"
+  name = "github.com/gorilla/websocket"
+  packages = ["."]
+  revision = "ea4d1f681babbce9545c9c5f3d5194a789c89f5b"
+  version = "v1.2.0"
 
 [[projects]]
   name = "github.com/jinzhu/gorm"
@@ -25,20 +25,14 @@
     ".",
     "dialects/postgres"
   ]
-  revision = "5174cc5c242a728b435ea2be8a2f7f998e15429b"
-  version = "v1.0"
+  revision = "6ed508ec6a4ecb3531899a69cbc746ccf65a4166"
+  version = "v1.9.1"
 
 [[projects]]
   branch = "master"
   name = "github.com/jinzhu/inflection"
   packages = ["."]
-  revision = "1c35d901db3da928c72a72d8458480cc9ade058f"
-
-[[projects]]
-  name = "github.com/jtolds/gls"
-  packages = ["."]
-  revision = "77f18212c9c7edc9bd6a33d383a7b545ce62f064"
-  version = "v4.2.1"
+  revision = "04140366298a54a039076d798123ffa108fff46c"
 
 [[projects]]
   branch = "master"
@@ -48,7 +42,7 @@
     "hstore",
     "oid"
   ]
-  revision = "19c8e9ad00952ce0c64489b60e8df88bb16dd514"
+  revision = "90697d60dd844d5ef6ff15135d0203f65d2f53b8"
 
 [[projects]]
   name = "github.com/nats-io/go-nats"
@@ -56,14 +50,14 @@
     "encoders/builtin",
     "util"
   ]
-  revision = "d66cb54e6b7bdd93f0b28afc8450d84c780dfb68"
-  version = "v1.4.0"
+  revision = "062418ea1c2181f52dc0f954f6204370519a868b"
+  version = "v1.5.0"
 
 [[projects]]
   name = "github.com/nats-io/nats"
   packages = ["."]
-  revision = "d66cb54e6b7bdd93f0b28afc8450d84c780dfb68"
-  version = "v1.4.0"
+  revision = "062418ea1c2181f52dc0f954f6204370519a868b"
+  version = "v1.5.0"
 
 [[projects]]
   name = "github.com/nats-io/nuid"
@@ -79,35 +73,15 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/r3labs/broadcast"
+  packages = ["."]
+  revision = "54cc293e8f0266abffe84fb75bdce10f4e63e6f6"
+
+[[projects]]
+  branch = "master"
   name = "github.com/r3labs/pattern"
   packages = ["."]
   revision = "d05362a6d27dc9fd78b02b3fb3242edb9967c0d7"
-
-[[projects]]
-  name = "github.com/r3labs/sse"
-  packages = ["."]
-  revision = "ab73c814bbdece537f16e92302cd99d1618d0e0d"
-  version = "1.0.1"
-
-[[projects]]
-  name = "github.com/smartystreets/assertions"
-  packages = [
-    ".",
-    "internal/go-render/render",
-    "internal/oglematchers"
-  ]
-  revision = "0b37b35ec7434b77e77a4bb29b79677cced992ea"
-  version = "1.8.1"
-
-[[projects]]
-  name = "github.com/smartystreets/goconvey"
-  packages = [
-    "convey",
-    "convey/gotest",
-    "convey/reporting"
-  ]
-  revision = "9e8dc3f972df6c8fcc0375ef492c24d0bb204857"
-  version = "1.6.3"
 
 [[projects]]
   branch = "v1"
@@ -130,6 +104,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "44727d65aa783160624cf0ed633e507cc90694234ffba40073ec5c049430708c"
+  inputs-digest = "3c5dad4a34c4f298f168472bdc5e0ac00721ad88f85ff6e946aa78aa00ea2e2f"
   solver-name = "gps-cdcl"
   solver-version = 1

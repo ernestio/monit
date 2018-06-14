@@ -10,11 +10,11 @@ import (
 	"net/http"
 
 	"github.com/nats-io/nats"
-	"github.com/r3labs/sse"
+	"github.com/r3labs/broadcast"
 )
 
 var nc *nats.Conn
-var ss *sse.Server
+var bc *broadcast.Server
 var host string
 var port string
 var secret string
@@ -25,14 +25,13 @@ func main() {
 	defer nc.Close()
 
 	// Create new SSE server
-	ss = sse.New()
-	ss.AutoStream = true
-	ss.EncodeBase64 = true
-	defer ss.Close()
+	bc = broadcast.New()
+	bc.AutoStream = true
+	defer bc.Close()
 
 	// Create new HTTP Server and add the route handler
 	mux := http.NewServeMux()
-	mux.HandleFunc("/events", authMiddleware)
+	mux.HandleFunc("/events", handler)
 
 	// Subscribe to subjects
 	_, err = nc.Subscribe(">", natsHandler)
