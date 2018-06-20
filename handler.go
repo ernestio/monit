@@ -73,7 +73,7 @@ func register(w http.ResponseWriter, s *Session) (*broadcast.Subscriber, chan *b
 		bc.CreateStream(*s.Stream)
 	}
 
-	sub := bc.GetSubscriber(s.Username)
+	sub := bc.GetStreamSubscriber(*s.Stream, s.Username)
 	if sub == nil {
 		sub = broadcast.NewSubscriber(s.Username)
 		bc.Register(*s.Stream, sub)
