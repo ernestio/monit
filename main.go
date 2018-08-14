@@ -9,7 +9,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/nats-io/nats"
+	"github.com/nats-io/go-nats"
 	"github.com/r3labs/broadcast"
 )
 

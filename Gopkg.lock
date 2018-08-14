@@ -69,14 +69,6 @@
   version = "v1.5.0"
 
 [[projects]]
-  digest = "1:665af347df4c5d1ae4c3eacd0754f5337a301f6a3f2444c9993b996605c8c02b"
-  name = "github.com/nats-io/nats"
-  packages = ["."]
-  pruneopts = ""
-  revision = "062418ea1c2181f52dc0f954f6204370519a868b"
-  version = "v1.5.0"
-
-[[projects]]
   digest = "1:be61e8224b84064109eaba8157cbb4bbe6ca12443e182b6624fdfa1c0dcf53d9"
   name = "github.com/nats-io/nuid"
   packages = ["."]
@@ -86,11 +78,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:aa3a9fa294515d65b98021e01fd3fdee8574768fcd6031244ed90cbcd55d48ad"
+  digest = "1:c21600df12e3d20bfbbf7457d244d6c6d9690ca88ec64f6412977995c06cdda5"
   name = "github.com/r3labs/akira"
   packages = ["."]
   pruneopts = ""
-  revision = "0f4f76b1155209cbdd18da3693f44f4fc9f8275d"
+  revision = "8754167cb7b314671eb1e2abf2e9465f2e3d5ad4"
 
 [[projects]]
   branch = "master"
@@ -137,7 +129,7 @@
     "github.com/dgrijalva/jwt-go",
     "github.com/ernestio/ernest-config-client",
     "github.com/gorilla/websocket",
-    "github.com/nats-io/nats",
+    "github.com/nats-io/go-nats",
     "github.com/r3labs/broadcast",
     "github.com/r3labs/pattern",
   ]
