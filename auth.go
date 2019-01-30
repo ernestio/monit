@@ -34,11 +34,13 @@ func authenticate(w http.ResponseWriter, c *websocket.Conn) (*Session, error) {
 
 	mt, message, err := c.ReadMessage()
 	if err != nil {
+		log.Println(string(message))
 		return nil, badrequest(w)
 	}
 
 	err = json.Unmarshal(message, &s)
 	if err != nil {
+		log.Println(string(message))
 		return nil, badrequest(w)
 	}
 
