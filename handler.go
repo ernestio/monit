@@ -7,6 +7,7 @@ package main
 import (
 	//
 	"errors"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/websocket"
@@ -27,6 +28,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var authorized bool
+	var areq *Session
 	var ch chan *broadcast.Event
 	var sub *broadcast.Subscriber
 
@@ -40,7 +42,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	for {
 		if !authorized {
-			areq, err := authenticate(w, c)
+			areq, err = authenticate(w, c)
 			if err != nil {
 				return
 			}
@@ -57,8 +59,10 @@ func handler(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
+			log.Println("Sending Message to ", areq.Stream)
 			err := c.WriteMessage(websocket.TextMessage, msg.Data)
 			if err != nil {
+				log.Println("failed to write to connection")
 				_ = internalerror(w)
 				return
 			}
@@ -87,20 +91,21 @@ func register(w http.ResponseWriter, s *Session) (*broadcast.Subscriber, chan *b
 }
 
 func upgradefail(w http.ResponseWriter) {
+	log.Println("Unable to upgrade to websocket connection")
 	http.Error(w, "Unable to upgrade to websocket connection", http.StatusBadRequest)
 }
 
 func badrequest(w http.ResponseWriter) error {
-	http.Error(w, "Could not process sent data", http.StatusBadRequest)
+	log.Println("Could not process sent data")
 	return errors.New("Could not process sent data")
 }
 
 func badstream(w http.ResponseWriter) error {
-	http.Error(w, "Please specify a valid stream", http.StatusBadRequest)
+	log.Println("Please specify a valid stream")
 	return errors.New("Please specify a valid stream")
 }
 
 func internalerror(w http.ResponseWriter) error {
-	http.Error(w, "Internal server error", http.StatusInternalServerError)
+	log.Println("Internal server error")
 	return errors.New("Internal server error")
 }

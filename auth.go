@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/dgrijalva/jwt-go"
@@ -24,7 +25,7 @@ type Session struct {
 }
 
 func unauthorized(w http.ResponseWriter) error {
-	http.Error(w, "Unauthorized", http.StatusUnauthorized)
+	log.Println("Unauthorized")
 	return errors.New("Unauthorized")
 }
 
