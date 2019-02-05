@@ -21,11 +21,9 @@ var upgrader = websocket.Upgrader{
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	var session *Session
-
 	reqid := uuid.New().String()
 
-	log.Println("client connected:", reqid)
+	log.Printf("[%s] client connected\n", reqid)
 
 	c, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -34,18 +32,14 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	defer func() {
-		log.Println("client disconnected:", reqid)
+		log.Printf("[%s] client disconnected\n", reqid)
 		_ = c.Close()
-
-		if session.channel != nil && session.subscriber != nil {
-			session.subscriber.Disconnect(
-				session.channel,
-			)
-		}
 	}()
 
+	var session *Session
+
 	for {
-		if !session.authenticated {
+		if session == nil {
 			session, err = authenticate(c, reqid)
 			if err != nil {
 				badrequest(c, reqid, err)
@@ -59,8 +53,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		log.Println("sending message to:", *session.Stream)
-
+		log.Printf("[%s] sending message to: %s\n", reqid, *session.Stream)
 		err := c.WriteMessage(websocket.TextMessage, msg.Data)
 		if err != nil {
 			badrequest(c, reqid, err)
