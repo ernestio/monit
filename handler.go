@@ -6,12 +6,12 @@ package main
 
 import (
 	//
-	"errors"
+
 	"log"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
-	"github.com/r3labs/broadcast"
 )
 
 var upgrader = websocket.Upgrader{
@@ -21,91 +21,61 @@ var upgrader = websocket.Upgrader{
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
+	var session *Session
+
+	reqid := uuid.New().String()
+
+	log.Println("client connected:", reqid)
+
 	c, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		upgradefail(w)
+		upgradefail(w, err)
 		return
 	}
 
-	var authorized bool
-	var areq *Session
-	var ch chan *broadcast.Event
-	var sub *broadcast.Subscriber
-
 	defer func() {
+		log.Println("client disconnected:", reqid)
 		_ = c.Close()
 
-		if ch != nil && sub != nil {
-			sub.Disconnect(ch)
+		if session.channel != nil && session.subscriber != nil {
+			session.subscriber.Disconnect(
+				session.channel,
+			)
 		}
 	}()
 
 	for {
-		if !authorized {
-			areq, err = authenticate(w, c)
+		if !session.authenticated {
+			session, err = authenticate(c, reqid)
 			if err != nil {
+				badrequest(c, reqid, err)
 				return
 			}
+		}
 
-			sub, ch, err = register(w, areq)
-			if err != nil {
-				return
-			}
+		msg, ok := <-session.channel
+		if !ok {
+			log.Printf("[%s] event channel closed: %s\n", reqid, *session.Stream)
+			return
+		}
 
-			authorized = true
-		} else {
-			msg, ok := <-ch
-			if !ok {
-				return
-			}
+		log.Println("sending message to:", *session.Stream)
 
-			log.Println("Sending Message to ", areq.Stream)
-			err := c.WriteMessage(websocket.TextMessage, msg.Data)
-			if err != nil {
-				log.Println("failed to write to connection")
-				_ = internalerror(w)
-				return
-			}
+		err := c.WriteMessage(websocket.TextMessage, msg.Data)
+		if err != nil {
+			badrequest(c, reqid, err)
+			return
 		}
 	}
 }
 
-func register(w http.ResponseWriter, s *Session) (*broadcast.Subscriber, chan *broadcast.Event, error) {
-	if s.Stream == nil {
-		return nil, nil, badstream(w)
-	}
-
-	if !bc.StreamExists(*s.Stream) && !bc.AutoStream {
-		return nil, nil, badstream(w)
-	} else if !bc.StreamExists(*s.Stream) && bc.AutoStream {
-		bc.CreateStream(*s.Stream)
-	}
-
-	sub := bc.GetStreamSubscriber(*s.Stream, s.Username)
-	if sub == nil {
-		sub = broadcast.NewSubscriber(s.Username)
-		bc.Register(*s.Stream, sub)
-	}
-
-	return sub, sub.Connect(), nil
-}
-
-func upgradefail(w http.ResponseWriter) {
-	log.Println("Unable to upgrade to websocket connection")
+func upgradefail(w http.ResponseWriter, err error) {
+	log.Println("Unable to upgrade to websocket connection:", err.Error())
 	http.Error(w, "Unable to upgrade to websocket connection", http.StatusBadRequest)
 }
 
-func badrequest(w http.ResponseWriter) error {
-	log.Println("Could not process sent data")
-	return errors.New("Could not process sent data")
-}
-
-func badstream(w http.ResponseWriter) error {
-	log.Println("Please specify a valid stream")
-	return errors.New("Please specify a valid stream")
-}
-
-func internalerror(w http.ResponseWriter) error {
-	log.Println("Internal server error")
-	return errors.New("Internal server error")
+func badrequest(c *websocket.Conn, reqid string, err error) {
+	log.Printf("[%s] bad request: %s\n", reqid, err.Error())
+	_ = c.WriteMessage(websocket.CloseUnsupportedData, []byte(`{"error": "bad request"}`))
+	c.Close()
 }

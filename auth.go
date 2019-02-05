@@ -9,10 +9,11 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"net/http"
+	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/websocket"
+	"github.com/r3labs/broadcast"
 )
 
 // Session : stores authentication data
@@ -20,52 +21,96 @@ type Session struct {
 	Token         string  `json:"token"`
 	Stream        *string `json:"stream"`
 	EventID       *string `json:"event_id"`
-	Username      string
-	Authenticated bool
+	Username      string  `json:"-"`
+	authenticated bool
+	subscriber    *broadcast.Subscriber
+	channel       chan *broadcast.Event
 }
 
-func unauthorized(w http.ResponseWriter) error {
-	log.Println("Unauthorized")
+func unauthorized(c *websocket.Conn, err error) error {
+	if err != nil {
+		log.Println("Unauthorized:", err.Error())
+	} else {
+		log.Println("Unauthorized")
+	}
+	_ = c.WriteMessage(websocket.CloseMessage, []byte(`{"status": "unauthorized"}`))
 	return errors.New("Unauthorized")
 }
 
-func authenticate(w http.ResponseWriter, c *websocket.Conn) (*Session, error) {
+func getAuthMessage(c *websocket.Conn, s *Session) error {
+	// timeout after 2 seconds if no request is sent
+	c.SetReadDeadline(time.Now().Add(time.Second * 2))
+
+	_, message, err := c.ReadMessage()
+	if err != nil {
+		return err
+	}
+
+	return json.Unmarshal(message, &s)
+}
+
+func register(stream *string, username, requestID string) (*broadcast.Subscriber, chan *broadcast.Event, error) {
+	if stream == nil {
+		return nil, nil, errors.New("no stream specified")
+	}
+
+	log.Printf("[%s] subscribing to stream: %s\n", requestID, *stream)
+
+	if !bc.StreamExists(*stream) && !bc.AutoStream {
+		return nil, nil, errors.New("stream does not exist")
+	} else if !bc.StreamExists(*stream) && bc.AutoStream {
+		bc.CreateStream(*stream)
+	}
+
+	sub := bc.GetStreamSubscriber(*stream, username)
+	if sub == nil {
+		sub = broadcast.NewSubscriber(username)
+		bc.Register(*stream, sub)
+	}
+
+	return sub, sub.Connect(), nil
+}
+
+func authenticate(c *websocket.Conn, requestID string) (*Session, error) {
 	var s Session
 
-	mt, message, err := c.ReadMessage()
+	log.Printf("[%s] authenticating user\n", requestID)
+
+	err := getAuthMessage(c, &s)
 	if err != nil {
-		log.Println(string(message))
-		return nil, badrequest(w)
+		return nil, err
 	}
 
-	err = json.Unmarshal(message, &s)
-	if err != nil {
-		log.Println(string(message))
-		return nil, badrequest(w)
-	}
-
-	token, err := jwt.Parse(s.Token, func(t *jwt.Token) (interface{}, error) {
-		if t.Method.Alg() != jwt.SigningMethodHS256.Alg() {
-			return nil, fmt.Errorf("unexpected jwt signing method=%v", t.Header["alg"])
-		}
-		return []byte(secret), nil
-	})
-
+	token, err := jwt.Parse(s.Token, jwtVerify)
 	if err != nil || !token.Valid {
-		_ = c.WriteMessage(mt, []byte(`{"status": "unauthorized"}`))
-		return nil, unauthorized(w)
+		return nil, errors.New("invalid token")
 	}
 
-	s.Authenticated = true
+	s.authenticated = true
+
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if ok {
 		s.Username = claims["username"].(string)
 	}
 
-	err = c.WriteMessage(mt, []byte(`{"status": "ok"}`))
+	log.Printf("[%s] user authenticated\n", requestID)
+	err = c.WriteMessage(websocket.TextMessage, []byte(`{"status": "ok"}`))
 	if err != nil {
-		return nil, internalerror(w)
+		return nil, err
+	}
+
+	// register to stream
+	s.subscriber, s.channel, err = register(s.Stream, s.Username, requestID)
+	if err != nil {
+		return nil, err
 	}
 
 	return &s, nil
+}
+
+func jwtVerify(t *jwt.Token) (interface{}, error) {
+	if t.Method.Alg() != jwt.SigningMethodHS256.Alg() {
+		return nil, fmt.Errorf("unexpected jwt signing method=%v", t.Header["alg"])
+	}
+	return []byte(secret), nil
 }
