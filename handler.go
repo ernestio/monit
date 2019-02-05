@@ -21,6 +21,8 @@ var upgrader = websocket.Upgrader{
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
+	var session *Session
+
 	reqid := uuid.New().String()
 
 	log.Printf("[%s] client connected\n", reqid)
@@ -34,9 +36,15 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	defer func() {
 		log.Printf("[%s] client disconnected\n", reqid)
 		_ = c.Close()
-	}()
 
-	var session *Session
+		if session == nil {
+			return
+		}
+
+		if session.subscriber != nil {
+			session.subscriber.Disconnect(session.channel)
+		}
+	}()
 
 	for {
 		if session == nil {
