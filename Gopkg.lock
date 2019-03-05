@@ -18,6 +18,14 @@
   revision = "9588aab91bdf53d2fa430f9505b33457d3fcb3bc"
 
 [[projects]]
+  digest = "1:a25a2c5ae694b01713fb6cd03c3b1ac1ccc1902b9f0a922680a88ec254f968e1"
+  name = "github.com/google/uuid"
+  packages = ["."]
+  pruneopts = ""
+  revision = "9b3b1e0f5f99ae461456d768e7d301a7acdaa2d8"
+  version = "v1.1.0"
+
+[[projects]]
   digest = "1:64d212c703a2b94054be0ce470303286b177ad260b2f89a307e3d1bb6c073ef6"
   name = "github.com/gorilla/websocket"
   packages = ["."]
@@ -86,11 +94,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:48c96cc3c5c5f1a21392c1ceea468aac11932789818e25d1a144724d6331857c"
+  digest = "1:8358619cbf7369ca45cc080d1fbb32a5ec1f3c9107670bf7084edfd1fca19f14"
   name = "github.com/r3labs/broadcast"
   packages = ["."]
   pruneopts = ""
-  revision = "3201c0671907e667adfd457d5e08be075f59dfcc"
+  revision = "4dae0cec43490a508826503da448ab0db38ad551"
 
 [[projects]]
   branch = "master"
@@ -128,6 +136,7 @@
   input-imports = [
     "github.com/dgrijalva/jwt-go",
     "github.com/ernestio/ernest-config-client",
+    "github.com/google/uuid",
     "github.com/gorilla/websocket",
     "github.com/nats-io/go-nats",
     "github.com/r3labs/broadcast",
