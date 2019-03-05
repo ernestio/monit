@@ -39,7 +39,7 @@ func unauthorized(c *websocket.Conn, err error) error {
 
 func getAuthMessage(c *websocket.Conn, s *Session) error {
 	// timeout after 2 seconds if no request is sent
-	c.SetReadDeadline(time.Now().Add(time.Second * 2))
+	c.SetReadDeadline(time.Now().Add(time.Second * 5))
 
 	_, message, err := c.ReadMessage()
 	if err != nil {

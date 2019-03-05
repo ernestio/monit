@@ -50,7 +50,7 @@ func processBuild(msg *nats.Msg) {
 		bc.Publish(id, data)
 		go func(bc *broadcast.Server) {
 			// Wait for any late connecting clients before closing stream
-			time.Sleep(broadcast.DefaultMaxInactivity)
+			time.Sleep(time.Second * 10)
 			log.Println("Closing stream: ", id)
 		}(bc)
 	}
