@@ -78,5 +78,5 @@ func upgradefail(w http.ResponseWriter, err error) {
 func badrequest(c *websocket.Conn, reqid string, err error) {
 	log.Printf("[%s] bad request: %s\n", reqid, err.Error())
 	_ = c.WriteMessage(websocket.CloseUnsupportedData, []byte(`{"error": "bad request"}`))
-	c.Close()
+	_ = c.Close()
 }
